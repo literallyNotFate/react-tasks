@@ -1,0 +1,53 @@
+export interface IUser {
+  email: string;
+  lastName: string;
+  firstName: string;
+  phoneNumber: string;
+  password: string;
+}
+
+export interface IProductForm {
+  name: string;
+  description?: string;
+  currency: string;
+  price: number;
+  brandId: number;
+}
+
+export interface IError {
+  errors: string[];
+}
+
+export interface IErrorResponse {
+  message: string[];
+}
+
+export interface ILogin {
+  email: string;
+  password: string;
+}
+
+export interface IProduct {
+  id: number;
+  name: string;
+  description?: string;
+  currency: string;
+  price: number;
+  brandId: number;
+  createdAt: string;
+  updatedAt: string;
+  brand: IBrand;
+}
+
+export interface IBrand {
+  id: number;
+  name: string;
+  createdAt: string;
+  updatedAt: string;
+  products?: IProduct[];
+}
+
+export interface IBrandPartial {
+  id: number;
+  name: string;
+}
