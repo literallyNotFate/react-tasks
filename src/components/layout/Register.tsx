@@ -3,7 +3,6 @@ import { IUser, IError } from "../../models/types";
 import FormButton from "../ui/FormButton";
 import FormInput from "../ui/FormInput";
 import { axiosApi } from "../../api/axios";
-// import { AxiosError } from "axios";
 import { useNavigate } from "react-router-dom";
 import Errors from "../ui/Errors";
 
@@ -53,7 +52,6 @@ const Register = () => {
         }
       })
       .catch((err) => {
-        console.log(err);
         setSuccess("");
         if (err.response?.data.message) {
           setErrors({ errors: err.response?.data.message });

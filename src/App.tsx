@@ -4,6 +4,7 @@ import Products from "./components/layout/Products";
 import { useRoutes, BrowserRouter } from "react-router-dom";
 import NewProduct from "./components/layout/NewProduct";
 import ProductInspect from "./components/layout/ProductInspect";
+import Navbar from "./components/ui/Navbar";
 
 const AppRoutes = () => {
   const routes = useRoutes([
@@ -21,6 +22,7 @@ function App() {
   return (
     <div className="w-full">
       <BrowserRouter>
+        <Navbar />
         <AppRoutes />
       </BrowserRouter>
     </div>

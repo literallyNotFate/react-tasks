@@ -51,3 +51,8 @@ export interface IBrandPartial {
   id: number;
   name: string;
 }
+
+export interface ICartItem {
+  product: IProduct;
+  quantity: number;
+}

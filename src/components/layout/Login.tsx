@@ -1,10 +1,9 @@
 import { useState, FormEvent, ChangeEvent } from "react";
 import FormInput from "../ui/FormInput";
 import { axiosApi } from "../../api/axios";
-import { AxiosError } from "axios";
 import FormButton from "../ui/FormButton";
 import { useNavigate } from "react-router-dom";
-import { ILogin, IError, IErrorResponse } from "../../models/types";
+import { ILogin, IError } from "../../models/types";
 import Errors from "../ui/Errors";
 
 const Login = () => {
@@ -48,11 +47,11 @@ const Login = () => {
           navigate("/products", { replace: true });
         }
       })
-      .catch((err: AxiosError<IErrorResponse>) => {
-        console.log(err.response?.data);
-
+      .catch((err) => {
         if (err.response?.data.message) {
           setErrors({ errors: err.response?.data.message });
+        } else if (err.response?.data) {
+          setErrors({ errors: [err.response?.data] });
         }
       });
   };

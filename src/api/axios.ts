@@ -28,7 +28,6 @@ axiosApi.interceptors.response.use(
     return response;
   },
   function (error) {
-    // const token = localStorage.getItem("accessToken");
     if (error.response.status === 401) {
       window.location.href = "/login";
       return Promise.reject(error);
