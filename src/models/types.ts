@@ -64,3 +64,8 @@ export interface IModal {
   setShow: (value: boolean) => void;
   children?: ReactNode;
 }
+
+export interface ICurrency {
+  code: string;
+  rate: number;
+}

@@ -5,8 +5,9 @@ import FormInput from "../../ui/shared/FormInput";
 import { IProductForm, IError, IBrandPartial } from "../../../models/types";
 import Errors from "../../ui/Errors";
 import { useNavigate } from "react-router-dom";
+import { CURRENCIES } from "../../../lib/constants";
 
-const NewProduct = () => {
+const NewProduct: React.FC = () => {
   const navigate = useNavigate();
   const [product, setProduct] = useState<IProductForm>({
     name: "",
@@ -98,26 +99,49 @@ const NewProduct = () => {
         )}
 
         <div className="flex flex-col gap-2">
-          <FormInput name="name" onChange={handleChange} label="Product Name" />
+          <FormInput
+            name="name"
+            value={product.name}
+            onChange={handleChange}
+            label="Product Name"
+          />
 
           <div className="flex justify-center gap-7">
             <FormInput
               name="price"
+              value={product.price}
               onChange={handleChange}
               label="Price"
               type="number"
             />
-            <FormInput
-              name="currency"
-              onChange={handleChange}
-              label="Currency"
-            />
+
+            <div className="flex flex-col gap-2 w-full">
+              <label htmlFor="currency">Currency</label>
+              <select
+                id="currency"
+                className="p-2 border border-indigo-400 focus:outline-none focus:border-indigo-700 duration:100 rounded-md w-full"
+                value={product.currency}
+                onChange={(e: ChangeEvent<HTMLSelectElement>) => {
+                  setProduct((prev) => ({
+                    ...prev,
+                    ["currency"]: e.target.value,
+                  }));
+                }}
+              >
+                {CURRENCIES.map((code) => (
+                  <option key={code} value={code}>
+                    {code}
+                  </option>
+                ))}
+              </select>
+            </div>
 
             <div className="flex flex-col gap-2 w-full">
               <label htmlFor="brands">Brand</label>
               <select
                 id="brands"
                 className="p-2 border border-indigo-400 focus:outline-none focus:border-indigo-700 duration:100 rounded-md w-full"
+                value={product.brandId}
                 onChange={(e: ChangeEvent<HTMLSelectElement>) => {
                   setProduct((prev) => ({
                     ...prev,
@@ -141,6 +165,7 @@ const NewProduct = () => {
               id="description"
               className="p-2 border border-indigo-400 focus:outline-none focus:border-indigo-700 duration:100 rounded-md w-full h-[150px]"
               style={{ resize: "none" }}
+              value={product.description}
               onChange={(e: ChangeEvent<HTMLTextAreaElement>) => {
                 setProduct((prev) => ({
                   ...prev,

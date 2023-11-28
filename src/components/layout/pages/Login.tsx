@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { ILogin, IError } from "../../../models/types";
 import Errors from "../../ui/Errors";
 
-const Login = () => {
+const Login: React.FC = () => {
   const [user, setUser] = useState<ILogin>({
     email: "",
     password: "",

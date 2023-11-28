@@ -1,6 +1,6 @@
 import { IError } from "../../models/types";
 
-const Errors: React.FC<IError> = ({ errors }: IError) => {
+const Errors: React.FC<IError> = ({ errors }) => {
   return (
     <>
       {errors.map((error, index) => (

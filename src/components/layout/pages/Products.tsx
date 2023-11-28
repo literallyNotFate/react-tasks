@@ -5,8 +5,9 @@ import ProductCard from "../../ui/ProductCard";
 import { useNavigate } from "react-router-dom";
 import Cart from "../../ui/Cart";
 import FormButton from "../../ui/shared/FormButton";
+import useCurrency from "../../../lib/hooks/useCurrency";
 
-const Products = () => {
+const Products: React.FC = () => {
   const [products, setProducts] = useState<IProduct[]>([]);
   const navigate = useNavigate();
 
@@ -23,6 +24,7 @@ const Products = () => {
 
   const [showCart, setShowCart] = useState<boolean>(false);
   const [cartItems, setCartItems] = useState<ICartItem[]>([]);
+  const [target, setTarget] = useState<string>("EUR");
 
   const addToCart = (product: IProduct) => {
     const existingItem = cartItems.find(
@@ -65,12 +67,23 @@ const Products = () => {
     }
   };
 
+  const { convert, error } = useCurrency();
+
   const total = useMemo(() => {
-    return cartItems.reduce(
-      (total, item) => total + item.product.price * item.quantity,
-      0
-    );
-  }, [cartItems]);
+    let total: number = 0;
+
+    cartItems.forEach((item) => {
+      const converted = convert(
+        item.product.price,
+        item.product.currency,
+        target
+      );
+
+      total += converted * item.quantity;
+    });
+
+    return total;
+  }, [cartItems, target, convert]);
 
   const quantity = useMemo(() => {
     return cartItems.reduce((total, item) => total + item.quantity, 0);
@@ -78,7 +91,7 @@ const Products = () => {
 
   return (
     <>
-      <div className="p-12 shadow-lg rounded-lg bg-white border border-red-500">
+      <div className="p-12 shadow-lg rounded-lg bg-white">
         <div>
           <h1 className="mb-6 font-bold text-3xl">
             Products ({products.length})
@@ -88,6 +101,8 @@ const Products = () => {
               Open Cart ({quantity})
             </FormButton>
           </div>
+
+          {error && <div>Error: {error}</div>}
 
           <div className="grid grid-cols-3 gap-10">
             {products.length > 0 ? (
@@ -115,6 +130,8 @@ const Products = () => {
           remove={removeFromCart}
           total={total}
           quantity={quantity}
+          target={target}
+          setTarget={setTarget}
         />
       </div>
     </>

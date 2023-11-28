@@ -6,7 +6,7 @@ import { axiosApi } from "../../../api/axios";
 import { useNavigate } from "react-router-dom";
 import Errors from "../../ui/Errors";
 
-const Register = () => {
+const Register: React.FC = () => {
   const [user, setUser] = useState<IUser>({
     firstName: "",
     lastName: "",

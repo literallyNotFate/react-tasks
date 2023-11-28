@@ -1,4 +1,4 @@
-const Navbar = () => {
+const Navbar: React.FC = () => {
   return (
     <div className="p-6 shadow-lg rounded-lg bg-white mb-12 flex gap-5 w-1/5 mx-auto justify-center">
       <div>

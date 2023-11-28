@@ -10,6 +10,7 @@ import FormButton from "./shared/FormButton";
 import { axiosApi } from "../../api/axios";
 import Errors from "./Errors";
 import Modal from "./shared/Modal";
+import { CURRENCIES } from "../../lib/constants";
 
 interface IEditProps extends IModal {
   edit: IProductForm;
@@ -102,12 +103,27 @@ const Edit: React.FC<IEditProps> = ({
                     type="number"
                     value={editData.price || ""}
                   />
-                  <FormInput
-                    name="currency"
-                    onChange={handleChange}
-                    label="Currency"
-                    value={editData.currency || ""}
-                  />
+
+                  <div className="flex flex-col gap-2 w-full">
+                    <label htmlFor="currency">Brand</label>
+                    <select
+                      id="currency"
+                      className="p-2 border border-indigo-400 focus:outline-none focus:border-indigo-700 duration:100 rounded-md w-full"
+                      value={editData.currency}
+                      onChange={(e: ChangeEvent<HTMLSelectElement>) => {
+                        setEditData((prev) => ({
+                          ...prev,
+                          ["currency"]: e.target.value,
+                        }));
+                      }}
+                    >
+                      {CURRENCIES.map((code) => (
+                        <option key={code} value={code}>
+                          {code}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
 
                   <div className="flex flex-col gap-2 w-full">
                     <label htmlFor="brands">Brand</label>

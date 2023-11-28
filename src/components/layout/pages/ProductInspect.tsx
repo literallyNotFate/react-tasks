@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import FormButton from "../../ui/shared/FormButton";
 import Edit from "../../ui/Edit";
 
-const ProductInspect = () => {
+const ProductInspect: React.FC = () => {
   const { id } = useParams();
   const [product, setProduct] = useState<IProduct>();
   const [edit, setEdit] = useState<IProductForm>({

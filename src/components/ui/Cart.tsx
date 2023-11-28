@@ -1,6 +1,8 @@
 import { ICartItem, IModal, IProduct } from "../../models/types";
+import { ChangeEvent } from "react";
 import FormButton from "./shared/FormButton";
 import Modal from "./shared/Modal";
+import { CURRENCIES } from "../../lib/constants";
 
 interface ICartProps extends IModal {
   items: ICartItem[];
@@ -8,6 +10,8 @@ interface ICartProps extends IModal {
   remove: (product: IProduct) => void;
   total: number;
   quantity: number;
+  target: string;
+  setTarget: (value: string) => void;
 }
 
 const Cart: React.FC<ICartProps> = ({
@@ -18,6 +22,8 @@ const Cart: React.FC<ICartProps> = ({
   remove,
   total,
   quantity,
+  target,
+  setTarget,
 }) => {
   return (
     <>
@@ -25,6 +31,24 @@ const Cart: React.FC<ICartProps> = ({
         {items.length > 0 ? (
           <>
             <h1 className="mb-6 font-bold text-3xl">Cart Items ({quantity})</h1>
+
+            <div className="flex flex-col gap-2 w-full mb-6">
+              <label htmlFor="target">Select currency to convert total</label>
+              <select
+                id="target"
+                className="p-2 border border-indigo-400 focus:outline-none focus:border-indigo-700 duration:100 rounded-md w-full"
+                value={target}
+                onChange={(e: ChangeEvent<HTMLSelectElement>) => {
+                  setTarget(e.target.value);
+                }}
+              >
+                {CURRENCIES.map((code) => (
+                  <option key={code} value={code}>
+                    {code}
+                  </option>
+                ))}
+              </select>
+            </div>
 
             <ul>
               {items.map((item) => (
@@ -56,7 +80,7 @@ const Cart: React.FC<ICartProps> = ({
             </ul>
 
             <p className="my-6 text-end font-bold text-green-500 text-2xl">
-              Total: {total} {items.length > 0 && items[0].product.currency}
+              Total: {total.toFixed(2)} in {target}
             </p>
           </>
         ) : (
