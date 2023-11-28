@@ -1,5 +1,5 @@
 import { IProduct } from "../../models/types";
-import FormButton from "./FormButton";
+import FormButton from "./shared/FormButton";
 
 interface IProductCardProps {
   product: IProduct;
@@ -11,7 +11,7 @@ const ProductCard: React.FC<IProductCardProps> = ({
   product,
   onClick,
   onCart,
-}: IProductCardProps) => {
+}) => {
   return (
     <div className="p-4 hover:scale-105 duration-100 border border-black rounded-lg cursor-pointer">
       <h1

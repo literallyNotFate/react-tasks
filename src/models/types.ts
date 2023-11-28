@@ -1,3 +1,5 @@
+import { ReactNode } from "react";
+
 export interface IUser {
   email: string;
   lastName: string;
@@ -55,4 +57,10 @@ export interface IBrandPartial {
 export interface ICartItem {
   product: IProduct;
   quantity: number;
+}
+
+export interface IModal {
+  show: boolean;
+  setShow: (value: boolean) => void;
+  children?: ReactNode;
 }

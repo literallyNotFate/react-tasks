@@ -1,14 +1,14 @@
 import React, { ReactNode, ButtonHTMLAttributes } from "react";
 
-interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+interface IButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children?: ReactNode;
   className?: string;
 }
 
 const defaultStyles: string =
-  "p-2 border bg-indigo-400 focus:outline-none hover:bg-indigo-700 duration:100 rounded-md w-full text-white";
+  "p-2 border text-white bg-indigo-400 focus:outline-none hover:bg-indigo-700 duration:100 rounded-md w-full";
 
-const FormButton: React.FC<ButtonProps> = ({
+const FormButton: React.FC<IButtonProps> = ({
   children,
   className,
   ...props

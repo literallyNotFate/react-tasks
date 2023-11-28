@@ -1,9 +1,9 @@
 import { ChangeEvent, FormEvent, useState, useEffect } from "react";
-import { axiosApi } from "../../api/axios";
-import FormButton from "../ui/FormButton";
-import FormInput from "../ui/FormInput";
-import { IProductForm, IError, IBrandPartial } from "../../models/types";
-import Errors from "../ui/Errors";
+import { axiosApi } from "../../../api/axios";
+import FormButton from "../../ui/shared/FormButton";
+import FormInput from "../../ui/shared/FormInput";
+import { IProductForm, IError, IBrandPartial } from "../../../models/types";
+import Errors from "../../ui/Errors";
 import { useNavigate } from "react-router-dom";
 
 const NewProduct = () => {

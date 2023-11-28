@@ -1,6 +1,6 @@
 import React, { ForwardRefRenderFunction, InputHTMLAttributes } from "react";
 
-interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
+interface IInputProps extends InputHTMLAttributes<HTMLInputElement> {
   name: string;
   label: string;
   ref: string;
@@ -10,7 +10,7 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 const defaultStyles: string =
   "p-2 border border-indigo-400 focus:outline-none focus:border-indigo-700 duration:100 rounded-md w-full";
 
-const Input: ForwardRefRenderFunction<HTMLInputElement, InputProps> = (
+const Input: ForwardRefRenderFunction<HTMLInputElement, IInputProps> = (
   { name, label, className, ...props },
   ref
 ) => {

@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
-import { axiosApi } from "../../api/axios";
-import { ICartItem, IProduct } from "../../models/types";
-import ProductCard from "../ui/ProductCard";
+import { useEffect, useMemo, useState } from "react";
+import { axiosApi } from "../../../api/axios";
+import { ICartItem, IProduct } from "../../../models/types";
+import ProductCard from "../../ui/ProductCard";
 import { useNavigate } from "react-router-dom";
-import Cart from "../ui/Cart";
-import FormButton from "../ui/FormButton";
+import Cart from "../../ui/Cart";
+import FormButton from "../../ui/shared/FormButton";
 
 const Products = () => {
   const [products, setProducts] = useState<IProduct[]>([]);
@@ -60,20 +60,21 @@ const Products = () => {
       const updatedCartItems = cartItems.filter(
         (item) => item.product.id !== product.id
       );
+
       setCartItems(updatedCartItems);
     }
   };
 
-  const getTotal = () => {
+  const total = useMemo(() => {
     return cartItems.reduce(
       (total, item) => total + item.product.price * item.quantity,
       0
     );
-  };
+  }, [cartItems]);
 
-  const getQuantity = () => {
+  const quantity = useMemo(() => {
     return cartItems.reduce((total, item) => total + item.quantity, 0);
-  };
+  }, [cartItems]);
 
   return (
     <>
@@ -84,7 +85,7 @@ const Products = () => {
           </h1>
           <div className="w-1/3 mb-6">
             <FormButton onClick={() => setShowCart(true)}>
-              Open Cart ({getQuantity()})
+              Open Cart ({quantity})
             </FormButton>
           </div>
 
@@ -107,13 +108,13 @@ const Products = () => {
         </div>
 
         <Cart
-          showCart={showCart}
-          setShowCart={setShowCart}
+          show={showCart}
+          setShow={setShowCart}
           items={cartItems}
           add={addToCart}
           remove={removeFromCart}
-          total={getTotal}
-          quantity={getQuantity}
+          total={total}
+          quantity={quantity}
         />
       </div>
     </>

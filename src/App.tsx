@@ -1,10 +1,10 @@
-import Login from "./components/layout/Login";
-import Register from "./components/layout/Register";
-import Products from "./components/layout/Products";
+import Login from "./components/layout/pages/Login";
+import Register from "./components/layout/pages/Register";
+import Products from "./components/layout/pages/Products";
 import { useRoutes, BrowserRouter } from "react-router-dom";
-import NewProduct from "./components/layout/NewProduct";
-import ProductInspect from "./components/layout/ProductInspect";
-import Navbar from "./components/ui/Navbar";
+import NewProduct from "./components/layout/pages/NewProduct";
+import ProductInspect from "./components/layout/pages/ProductInspect";
+import Navbar from "./components/layout/Navbar";
 
 const AppRoutes = () => {
   const routes = useRoutes([

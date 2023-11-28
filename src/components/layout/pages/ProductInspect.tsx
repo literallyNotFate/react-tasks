@@ -1,9 +1,9 @@
 import { useParams } from "react-router-dom";
-import { IError, IProduct, IProductForm } from "../../models/types";
-import { axiosApi } from "../../api/axios";
+import { IError, IProduct, IProductForm } from "../../../models/types";
+import { axiosApi } from "../../../api/axios";
 import { useEffect, useState } from "react";
-import FormButton from "../ui/FormButton";
-import ModalEdit from "../ui/ModalEdit";
+import FormButton from "../../ui/shared/FormButton";
+import Edit from "../../ui/Edit";
 
 const ProductInspect = () => {
   const { id } = useParams();
@@ -84,9 +84,9 @@ const ProductInspect = () => {
           <FormButton onClick={() => setShowModal(true)}>Edit</FormButton>
         </div>
 
-        <ModalEdit
-          showModal={showModal}
-          setShowModal={setShowModal}
+        <Edit
+          show={showModal}
+          setShow={setShowModal}
           edit={edit}
           onEdit={onEdit}
           errors={errors}
