@@ -1,6 +1,19 @@
 import { ReactNode } from "react";
 
 export interface IUser {
+  id: string;
+  email: string;
+  lastName: string;
+  firstName: string;
+  phoneNumber: string;
+  password: string;
+  createdAt: string;
+  updatedAt: string;
+  gender?: string;
+  role: string;
+}
+
+export interface IUserForm {
   email: string;
   lastName: string;
   firstName: string;
@@ -70,7 +83,7 @@ export interface ICurrency {
   rate: number;
 }
 
-export interface IAppointment {
+export interface IAppointmentData {
   name: string;
   startDate: string | null;
   endDate: string | null;
@@ -81,4 +94,15 @@ export interface IAppointmentForm {
   name: string;
   dateRange: [Date | null, Date | null] | null;
   userId: number;
+}
+
+export interface IAppointment {
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+  name: string;
+  startDate: string;
+  endDate: string;
+  userId: string;
+  user: IUser;
 }

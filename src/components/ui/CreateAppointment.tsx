@@ -36,10 +36,6 @@ const CreateAppointment: React.FC<ICreateAppointmentProps> = ({
     }));
   };
 
-  const handleClose = () => {
-    setShow(false);
-  };
-
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
 
@@ -60,9 +56,9 @@ const CreateAppointment: React.FC<ICreateAppointmentProps> = ({
   return (
     <>
       <Modal show={show} setShow={setShow}>
-        <div className="mx-5 mt-5">
+        <div>
           {success && (
-            <div className="p-3 bg-green-400 text-white rounded-md mb-3">
+            <div className="mx-5 mt-5 p-3 bg-green-400 text-white rounded-md mb-3">
               {success}
             </div>
           )}
@@ -109,8 +105,8 @@ const CreateAppointment: React.FC<ICreateAppointmentProps> = ({
             <FormButton type="submit">Create</FormButton>
 
             <FormButton
-              onClick={() => handleClose()}
-              className="bg-gray-300 hover:bg-gray-400"
+              onClick={() => setShow(false)}
+              className="bg-gray-400 hover:bg-gray-500"
             >
               Cancel
             </FormButton>

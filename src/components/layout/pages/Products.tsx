@@ -104,9 +104,9 @@ const Products: React.FC = () => {
 
           {error && <div>Error: {error}</div>}
 
-          <div className="grid grid-cols-3 gap-10">
+          <div>
             {products.length > 0 ? (
-              <>
+              <div className="grid grid-cols-3 gap-10">
                 {products.map((product) => (
                   <ProductCard
                     product={product}
@@ -115,9 +115,9 @@ const Products: React.FC = () => {
                     onCart={(product) => addToCart(product)}
                   />
                 ))}
-              </>
+              </div>
             ) : (
-              <h1>No data yet!</h1>
+              <h1 className="text-3xl font-bold text-center">No data yet!</h1>
             )}
           </div>
         </div>

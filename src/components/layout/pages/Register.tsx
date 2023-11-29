@@ -1,5 +1,5 @@
 import { useState, ChangeEvent, FormEvent } from "react";
-import { IUser, IError } from "../../../models/types";
+import { IUserForm, IError } from "../../../models/types";
 import FormButton from "../../ui/shared/FormButton";
 import FormInput from "../../ui/shared/FormInput";
 import { axiosApi } from "../../../api/axios";
@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import Errors from "../../ui/Errors";
 
 const Register: React.FC = () => {
-  const [user, setUser] = useState<IUser>({
+  const [user, setUser] = useState<IUserForm>({
     firstName: "",
     lastName: "",
     email: "",

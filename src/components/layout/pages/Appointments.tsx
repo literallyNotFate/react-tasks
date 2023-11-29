@@ -1,13 +1,31 @@
 import CreateAppointment from "../../ui/CreateAppointment";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import FormButton from "../../ui/shared/FormButton";
-import { IAppointment, IAppointmentForm } from "../../../models/types";
+import {
+  IAppointment,
+  IAppointmentData,
+  IAppointmentForm,
+} from "../../../models/types";
 import { format } from "date-fns";
 import { axiosApi } from "../../../api/axios";
+import AppointmentCard from "../../ui/AppointmentCard";
 
 const Appointments: React.FC = () => {
   const [showCreate, setShowCreate] = useState<boolean>(false);
   const [success, setSuccess] = useState<string>("");
+
+  const [appointments, setAppointments] = useState<IAppointment[]>([]);
+
+  useEffect(() => {
+    const getAppointments = () => {
+      axiosApi
+        .get("/appointment")
+        .then((res) => setAppointments(res.data))
+        .catch((err) => console.log(err));
+    };
+
+    getAppointments();
+  }, []);
 
   const onCreate = (appointment: IAppointmentForm) => {
     let startD: string | null = null;
@@ -21,7 +39,7 @@ const Appointments: React.FC = () => {
       }
     }
 
-    const data: IAppointment = {
+    const data: IAppointmentData = {
       name: appointment.name,
       startDate: startD,
       endDate: endD,
@@ -41,6 +59,14 @@ const Appointments: React.FC = () => {
       });
   };
 
+  const onDelete = (appointment: IAppointment) => {
+    console.log("deleting", appointment.name);
+  };
+
+  const onEdit = (appointment: IAppointment) => {
+    console.log("editing", appointment.name);
+  };
+
   return (
     <>
       <div className="p-12 shadow-lg rounded-lg bg-white flex flex-col gap-5">
@@ -53,6 +79,23 @@ const Appointments: React.FC = () => {
           <FormButton onClick={() => setShowCreate(true)}>
             Create an appointment
           </FormButton>
+        </div>
+
+        <div className="mt-6">
+          {appointments.length > 0 ? (
+            <div className="grid grid-cols-3 gap-10">
+              {appointments.map((app) => (
+                <AppointmentCard
+                  appointment={app}
+                  key={app.id}
+                  onDelete={onDelete}
+                  onEdit={onEdit}
+                />
+              ))}
+            </div>
+          ) : (
+            <h1 className="text-3xl font-bold text-center">No data yet!</h1>
+          )}
         </div>
 
         <CreateAppointment
