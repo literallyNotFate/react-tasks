@@ -74,11 +74,15 @@ const Edit: React.FC<IEditProps> = ({
   return (
     <>
       <Modal show={show} setShow={setShow}>
-        <div className="mx-5 mt-5">
-          {errors.errors.length > 0 && <Errors errors={errors.errors} />}
+        <div>
+          {errors.errors.length > 0 && (
+            <div className="mx-5 mt-5">
+              <Errors errors={errors.errors} />
+            </div>
+          )}
 
           {success && (
-            <div className="p-3 bg-green-400 text-white rounded-md mb-3">
+            <div className="mt-5 mx-5 p-3 bg-green-400 text-white rounded-md mb-3">
               {success}
             </div>
           )}

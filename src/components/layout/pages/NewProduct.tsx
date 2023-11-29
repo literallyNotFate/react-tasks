@@ -9,15 +9,15 @@ import { CURRENCIES } from "../../../lib/constants";
 
 const NewProduct: React.FC = () => {
   const navigate = useNavigate();
+  const [brands, setBrands] = useState<IBrandPartial[]>([]);
+
   const [product, setProduct] = useState<IProductForm>({
     name: "",
     description: "",
-    currency: "",
+    currency: CURRENCIES[0],
     price: 0,
-    brandId: 0,
+    brandId: 1,
   });
-
-  const [brands, setBrands] = useState<IBrandPartial[]>([]);
 
   useEffect(() => {
     const getBrands = () => {
@@ -30,7 +30,7 @@ const NewProduct: React.FC = () => {
     };
 
     getBrands();
-  }, []);
+  }, [brands]);
 
   const [errors, setErrors] = useState<IError>({ errors: [] });
   const [success, setSuccess] = useState<string>("");

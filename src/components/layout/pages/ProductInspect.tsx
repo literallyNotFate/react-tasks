@@ -45,13 +45,7 @@ const ProductInspect: React.FC = () => {
       .patch(`/product/${id}`, updatedData)
       .then((res) => {
         setErrors({ errors: [] });
-        setSuccess(res.statusText);
-
-        setTimeout(() => {
-          setSuccess("");
-        }, 1000);
-
-        setShowModal(false);
+        setSuccess(`Edited product with id: ${res.data.id}`);
       })
       .catch((err) => {
         setSuccess("");
@@ -61,8 +55,6 @@ const ProductInspect: React.FC = () => {
           setErrors({ errors: [err.response?.data] });
         }
       });
-
-    window.location.reload();
   };
 
   return (

@@ -5,16 +5,24 @@ import {
   IAppointment,
   IAppointmentData,
   IAppointmentForm,
+  IError,
 } from "../../../models/types";
 import { format } from "date-fns";
 import { axiosApi } from "../../../api/axios";
 import AppointmentCard from "../../ui/AppointmentCard";
+import EditAppointment from "../../ui/EditAppointment";
+import { parseDateFromString } from "../../../lib/utils";
 
 const Appointments: React.FC = () => {
   const [showCreate, setShowCreate] = useState<boolean>(false);
+  const [showEdit, setShowEdit] = useState<boolean>(false);
   const [success, setSuccess] = useState<string>("");
 
   const [appointments, setAppointments] = useState<IAppointment[]>([]);
+  const [edit, setEdit] = useState<IAppointmentForm>();
+
+  const [editId, setEditId] = useState<string>("");
+  const [errors, setErrors] = useState<IError>({ errors: [] });
 
   useEffect(() => {
     const getAppointments = () => {
@@ -27,7 +35,7 @@ const Appointments: React.FC = () => {
     getAppointments();
   }, []);
 
-  const onCreate = (appointment: IAppointmentForm) => {
+  const parseToApiData = (appointment: IAppointmentForm): IAppointmentData => {
     let startD: string | null = null;
     let endD: string | null = null;
 
@@ -46,6 +54,12 @@ const Appointments: React.FC = () => {
       userId: appointment.userId,
     };
 
+    return data;
+  };
+
+  const onCreate = (appointment: IAppointmentForm) => {
+    const data = parseToApiData(appointment);
+
     axiosApi
       .post("/appointment", data)
       .then((res) => {
@@ -60,11 +74,45 @@ const Appointments: React.FC = () => {
   };
 
   const onDelete = (appointment: IAppointment) => {
-    console.log("deleting", appointment.name);
+    axiosApi
+      .delete(`/appointment/${appointment.id}`)
+      .then(() => {
+        console.log(`Deleted appointment with id: ${appointment.id}`);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const onEdit = (appointment: IAppointment) => {
-    console.log("editing", appointment.name);
+    const editData: IAppointmentForm = {
+      name: appointment.name,
+      dateRange: [
+        parseDateFromString(appointment.startDate, "-"),
+        parseDateFromString(appointment.endDate, "-"),
+      ],
+      userId: parseInt(appointment.userId),
+    };
+
+    setEdit(editData);
+    setEditId(appointment.id);
+    setShowEdit(true);
+  };
+
+  const editing = (updatedData: IAppointmentForm) => {
+    const data = parseToApiData(updatedData);
+
+    axiosApi
+      .patch(`/appointment/${editId}`, data)
+      .then((res) => {
+        setErrors({ errors: [] });
+        console.log(res);
+        setSuccess(`Edited appointment with id: ${res.data.id}`);
+      })
+      .catch((err) => {
+        setSuccess("");
+        setErrors({ errors: err.response?.data.message });
+      });
   };
 
   return (
@@ -103,6 +151,17 @@ const Appointments: React.FC = () => {
           setShow={setShowCreate}
           onCreate={onCreate}
           success={success}
+        />
+
+        <EditAppointment
+          show={showEdit}
+          setShow={setShowEdit}
+          edit={edit as IAppointmentForm}
+          success={success}
+          editing={editing}
+          id={editId}
+          errors={errors}
+          setErrors={setErrors}
         />
       </div>
     </>

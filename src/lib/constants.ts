@@ -1,4 +1,4 @@
-export const BASE_URL: string = "http://localhost:3000/api/";
+export const BASE_URL: string = "https://test-backend-bm5r.onrender.com/api/";
 
 export const CURRENCIES: string[] = [
   "USD",
