@@ -69,3 +69,16 @@ export interface ICurrency {
   code: string;
   rate: number;
 }
+
+export interface IAppointment {
+  name: string;
+  startDate: string | null;
+  endDate: string | null;
+  userId: number;
+}
+
+export interface IAppointmentForm {
+  name: string;
+  dateRange: [Date | null, Date | null] | null;
+  userId: number;
+}

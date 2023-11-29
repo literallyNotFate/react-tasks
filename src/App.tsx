@@ -5,6 +5,7 @@ import { useRoutes, BrowserRouter } from "react-router-dom";
 import NewProduct from "./components/layout/pages/NewProduct";
 import ProductInspect from "./components/layout/pages/ProductInspect";
 import Navbar from "./components/layout/Navbar";
+import Appointments from "./components/layout/pages/Appointments";
 
 const AppRoutes = () => {
   const routes = useRoutes([
@@ -13,6 +14,7 @@ const AppRoutes = () => {
     { path: "/products", element: <Products /> },
     { path: "/products/new", element: <NewProduct /> },
     { path: "/products/:id", element: <ProductInspect /> },
+    { path: "/appointments", element: <Appointments /> },
   ]);
 
   return routes;
