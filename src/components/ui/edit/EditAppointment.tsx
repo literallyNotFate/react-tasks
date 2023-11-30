@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
-import FormInput from "./shared/FormInput";
-import { IAppointmentForm, IError, IModal } from "../../models/types";
-import FormButton from "./shared/FormButton";
-import Modal from "./shared/Modal";
+import FormInput from "../shared/FormInput";
+import { IAppointmentForm, IError, IModal } from "../../../models/types";
+import FormButton from "../shared/FormButton";
+import Modal from "../shared/Modal";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import Errors from "./Errors";
+import Errors from "../shared/Errors";
 
 interface IEditAppointmentProps extends IModal {
   edit: IAppointmentForm | undefined;

@@ -3,7 +3,7 @@ import { axiosApi } from "../../../api/axios";
 import FormButton from "../../ui/shared/FormButton";
 import FormInput from "../../ui/shared/FormInput";
 import { IProductForm, IError, IBrandPartial } from "../../../models/types";
-import Errors from "../../ui/Errors";
+import Errors from "../../ui/shared/Errors";
 import { useNavigate } from "react-router-dom";
 import { CURRENCIES } from "../../../lib/constants";
 

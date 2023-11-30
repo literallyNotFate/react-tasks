@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { axiosApi } from "../../../api/axios";
 import { ICartItem, IProduct } from "../../../models/types";
-import ProductCard from "../../ui/ProductCard";
+import ProductCard from "../../ui/shared/card/ProductCard";
 import { useNavigate } from "react-router-dom";
 import Cart from "../../ui/Cart";
 import FormButton from "../../ui/shared/FormButton";

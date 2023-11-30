@@ -1,5 +1,5 @@
-import { IAppointment } from "../../models/types";
-import FormButton from "./shared/FormButton";
+import { IAppointment } from "../../../../models/types";
+import FormButton from "../FormButton";
 
 interface IAppointmentCardProps {
   appointment: IAppointment;

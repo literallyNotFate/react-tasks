@@ -1,16 +1,16 @@
 import { useState, ChangeEvent, useEffect } from "react";
-import FormInput from "./shared/FormInput";
+import FormInput from "../shared/FormInput";
 import {
   IBrandPartial,
   IError,
   IModal,
   IProductForm,
-} from "../../models/types";
-import FormButton from "./shared/FormButton";
-import { axiosApi } from "../../api/axios";
-import Errors from "./Errors";
-import Modal from "./shared/Modal";
-import { CURRENCIES } from "../../lib/constants";
+} from "../../../models/types";
+import FormButton from "../shared/FormButton";
+import { axiosApi } from "../../../api/axios";
+import Errors from "../shared/Errors";
+import Modal from "../shared/Modal";
+import { CURRENCIES } from "../../../lib/constants";
 
 interface IEditProps extends IModal {
   edit: IProductForm;

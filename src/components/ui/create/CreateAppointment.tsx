@@ -1,8 +1,8 @@
 import { ChangeEvent, useState } from "react";
-import { IAppointmentForm, IModal } from "../../models/types";
-import FormButton from "./shared/FormButton";
-import FormInput from "./shared/FormInput";
-import Modal from "./shared/Modal";
+import { IAppointmentForm, IModal } from "../../../models/types";
+import FormButton from "../shared/FormButton";
+import FormInput from "../shared/FormInput";
+import Modal from "../shared/Modal";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 

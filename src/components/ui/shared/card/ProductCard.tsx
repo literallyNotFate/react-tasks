@@ -1,5 +1,5 @@
-import { IProduct } from "../../models/types";
-import FormButton from "./shared/FormButton";
+import { IProduct } from "../../../../models/types";
+import FormButton from "../FormButton";
 
 interface IProductCardProps {
   product: IProduct;

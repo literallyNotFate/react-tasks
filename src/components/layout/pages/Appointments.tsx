@@ -1,4 +1,4 @@
-import CreateAppointment from "../../ui/CreateAppointment";
+import CreateAppointment from "../../ui/create/CreateAppointment";
 import { useEffect, useState } from "react";
 import FormButton from "../../ui/shared/FormButton";
 import {
@@ -9,9 +9,9 @@ import {
 } from "../../../models/types";
 import { format } from "date-fns";
 import { axiosApi } from "../../../api/axios";
-import AppointmentCard from "../../ui/AppointmentCard";
-import EditAppointment from "../../ui/EditAppointment";
+import EditAppointment from "../../ui/edit/EditAppointment";
 import { parseDateFromString } from "../../../lib/utils";
+import AppointmentCalendar from "../../ui/calendar/AppointmentCalendar";
 
 const Appointments: React.FC = () => {
   const [showCreate, setShowCreate] = useState<boolean>(false);
@@ -130,20 +130,11 @@ const Appointments: React.FC = () => {
         </div>
 
         <div className="mt-6">
-          {appointments.length > 0 ? (
-            <div className="grid grid-cols-3 gap-10">
-              {appointments.map((app) => (
-                <AppointmentCard
-                  appointment={app}
-                  key={app.id}
-                  onDelete={onDelete}
-                  onEdit={onEdit}
-                />
-              ))}
-            </div>
-          ) : (
-            <h1 className="text-3xl font-bold text-center">No data yet!</h1>
-          )}
+          <AppointmentCalendar
+            appointments={appointments}
+            onDelete={onDelete}
+            onEdit={onEdit}
+          />
         </div>
 
         <CreateAppointment

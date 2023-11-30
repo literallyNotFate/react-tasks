@@ -4,7 +4,7 @@ import FormButton from "../../ui/shared/FormButton";
 import FormInput from "../../ui/shared/FormInput";
 import { axiosApi } from "../../../api/axios";
 import { useNavigate } from "react-router-dom";
-import Errors from "../../ui/Errors";
+import Errors from "../../ui/shared/Errors";
 
 const Register: React.FC = () => {
   const [user, setUser] = useState<IUserForm>({

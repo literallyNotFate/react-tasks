@@ -1,4 +1,4 @@
-import { IError } from "../../models/types";
+import { IError } from "../../../models/types";
 
 const Errors: React.FC<IError> = ({ errors }) => {
   return (

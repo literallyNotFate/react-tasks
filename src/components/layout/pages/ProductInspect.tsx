@@ -3,7 +3,7 @@ import { IError, IProduct, IProductForm } from "../../../models/types";
 import { axiosApi } from "../../../api/axios";
 import { useEffect, useState } from "react";
 import FormButton from "../../ui/shared/FormButton";
-import Edit from "../../ui/Edit";
+import Edit from "../../ui/edit/Edit";
 
 const ProductInspect: React.FC = () => {
   const { id } = useParams();
