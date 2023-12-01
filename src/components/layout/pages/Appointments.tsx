@@ -6,6 +6,7 @@ import {
   IAppointmentData,
   IAppointmentForm,
   IError,
+  IUser,
 } from "../../../models/types";
 import { format } from "date-fns";
 import { axiosApi } from "../../../api/axios";
@@ -24,15 +25,25 @@ const Appointments: React.FC = () => {
   const [editId, setEditId] = useState<string>("");
   const [errors, setErrors] = useState<IError>({ errors: [] });
 
+  const [me, setMe] = useState<IUser>();
+
   useEffect(() => {
     const getAppointments = () => {
       axiosApi
-        .get("/appointment")
+        .get<IAppointment[]>("/appointment")
         .then((res) => setAppointments(res.data))
         .catch((err) => console.log(err));
     };
 
+    const getMe = () => {
+      axiosApi
+        .get<IUser>("/user/profile")
+        .then((res) => setMe(res.data))
+        .catch((err) => console.log(err));
+    };
+
     getAppointments();
+    getMe();
   }, []);
 
   const parseToApiData = (appointment: IAppointmentForm): IAppointmentData => {
@@ -47,11 +58,13 @@ const Appointments: React.FC = () => {
       }
     }
 
+    const id = me ? parseInt(me.id, 10) : 0;
+
     const data: IAppointmentData = {
       name: appointment.name,
       startDate: startD,
       endDate: endD,
-      userId: appointment.userId,
+      userId: id,
     };
 
     return data;
@@ -142,6 +155,7 @@ const Appointments: React.FC = () => {
           setShow={setShowCreate}
           onCreate={onCreate}
           success={success}
+          me={me as IUser}
         />
 
         <EditAppointment
@@ -153,6 +167,7 @@ const Appointments: React.FC = () => {
           id={editId}
           errors={errors}
           setErrors={setErrors}
+          me={me as IUser}
         />
       </div>
     </>

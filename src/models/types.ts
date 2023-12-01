@@ -93,7 +93,7 @@ export interface IAppointmentData {
 export interface IAppointmentForm {
   name: string;
   dateRange: [Date | null, Date | null] | null;
-  userId: number;
+  userId?: number;
 }
 
 export interface IAppointment {

@@ -1,5 +1,5 @@
 import { ChangeEvent, useState } from "react";
-import { IAppointmentForm, IModal } from "../../../models/types";
+import { IAppointmentForm, IModal, IUser } from "../../../models/types";
 import FormButton from "../shared/FormButton";
 import FormInput from "../shared/FormInput";
 import Modal from "../shared/Modal";
@@ -9,6 +9,7 @@ import "react-datepicker/dist/react-datepicker.css";
 interface ICreateAppointmentProps extends IModal {
   onCreate: (appointment: IAppointmentForm) => void;
   success: string;
+  me: IUser | null;
 }
 
 const CreateAppointment: React.FC<ICreateAppointmentProps> = ({
@@ -16,11 +17,11 @@ const CreateAppointment: React.FC<ICreateAppointmentProps> = ({
   setShow,
   onCreate,
   success,
+  me,
 }) => {
   const [appointment, setAppointment] = useState<IAppointmentForm>({
     name: "",
     dateRange: [null, null],
-    userId: 0,
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -32,7 +33,7 @@ const CreateAppointment: React.FC<ICreateAppointmentProps> = ({
     const { name, value } = e.target;
     setAppointment((prev) => ({
       ...prev,
-      [name]: name == "userId" ? parseInt(value) : value,
+      [name]: value,
     }));
   };
 
@@ -92,13 +93,12 @@ const CreateAppointment: React.FC<ICreateAppointmentProps> = ({
               <div className="mt-64"></div>
             </div>
 
-            <FormInput
-              name="userId"
-              onChange={handleChange}
-              label="User ID"
-              value={appointment.userId}
-              type="number"
-            />
+            <div className="pt-10 text-md">
+              Making appointment for{" "}
+              <span className="font-bold">
+                {me?.firstName} {me?.lastName}
+              </span>
+            </div>
           </div>
 
           <div className="bg-gray-50 flex justify-center py-3 px-3 gap-3 flex-row-reverse">

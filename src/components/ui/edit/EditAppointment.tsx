@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import FormInput from "../shared/FormInput";
-import { IAppointmentForm, IError, IModal } from "../../../models/types";
+import { IAppointmentForm, IError, IModal, IUser } from "../../../models/types";
 import FormButton from "../shared/FormButton";
 import Modal from "../shared/Modal";
 import DatePicker from "react-datepicker";
@@ -14,6 +14,7 @@ interface IEditAppointmentProps extends IModal {
   id?: string;
   errors: IError;
   setErrors: (value: IError) => void;
+  me: IUser | null;
 }
 
 const EditAppointment: React.FC<IEditAppointmentProps> = ({
@@ -23,6 +24,7 @@ const EditAppointment: React.FC<IEditAppointmentProps> = ({
   editing,
   success,
   errors,
+  me,
 }) => {
   const [editData, setEditData] = useState<IAppointmentForm>();
 
@@ -36,7 +38,7 @@ const EditAppointment: React.FC<IEditAppointmentProps> = ({
       if (prev) {
         return {
           ...prev,
-          [name]: name === "userId" ? parseInt(value) : value,
+          [name]: value,
         };
       }
 
@@ -109,13 +111,12 @@ const EditAppointment: React.FC<IEditAppointmentProps> = ({
               <div className="mt-64"></div>
             </div>
 
-            <FormInput
-              name="userId"
-              label="User ID"
-              value={editData?.userId || 0}
-              onChange={handleChange}
-              type="number"
-            />
+            <div className="pt-10 text-md">
+              Editing appointment for{" "}
+              <span className="font-bold">
+                {me?.firstName} {me?.lastName}
+              </span>
+            </div>
           </div>
 
           <div className="bg-gray-50 flex justify-center py-3 px-3 gap-3 flex-row-reverse">
