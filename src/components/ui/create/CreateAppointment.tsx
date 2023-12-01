@@ -8,7 +8,6 @@ import "react-datepicker/dist/react-datepicker.css";
 
 interface ICreateAppointmentProps extends IModal {
   onCreate: (appointment: IAppointmentForm) => void;
-  success: string;
   me: IUser | null;
 }
 
@@ -16,7 +15,6 @@ const CreateAppointment: React.FC<ICreateAppointmentProps> = ({
   show,
   setShow,
   onCreate,
-  success,
   me,
 }) => {
   const [appointment, setAppointment] = useState<IAppointmentForm>({
@@ -27,6 +25,7 @@ const CreateAppointment: React.FC<ICreateAppointmentProps> = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onCreate(appointment);
+    reset();
   };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -35,6 +34,13 @@ const CreateAppointment: React.FC<ICreateAppointmentProps> = ({
       ...prev,
       [name]: value,
     }));
+  };
+
+  const reset = () => {
+    setAppointment({
+      name: "",
+      dateRange: [null, null],
+    });
   };
 
   const [startDate, setStartDate] = useState<Date | null>(null);
@@ -57,14 +63,6 @@ const CreateAppointment: React.FC<ICreateAppointmentProps> = ({
   return (
     <>
       <Modal show={show} setShow={setShow}>
-        <div>
-          {success && (
-            <div className="mx-5 mt-5 p-3 bg-green-400 text-white rounded-md mb-3">
-              {success}
-            </div>
-          )}
-        </div>
-
         <form onSubmit={handleSubmit}>
           <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
             <FormInput
@@ -85,6 +83,7 @@ const CreateAppointment: React.FC<ICreateAppointmentProps> = ({
                   endDate={endDate}
                   dateFormat={"dd/MM/yyyy"}
                   open
+                  readOnly
                   name="date"
                   className="p-2 border border-indigo-400 focus:outline-none focus:border-indigo-700 duration:100 rounded-md w-full"
                 />

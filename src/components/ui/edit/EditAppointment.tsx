@@ -10,7 +10,6 @@ import Errors from "../shared/Errors";
 interface IEditAppointmentProps extends IModal {
   edit: IAppointmentForm | undefined;
   editing: (updatedData: IAppointmentForm) => void;
-  success: string;
   id?: string;
   errors: IError;
   setErrors: (value: IError) => void;
@@ -22,7 +21,6 @@ const EditAppointment: React.FC<IEditAppointmentProps> = ({
   setShow,
   edit,
   editing,
-  success,
   errors,
   me,
 }) => {
@@ -75,12 +73,6 @@ const EditAppointment: React.FC<IEditAppointmentProps> = ({
               <Errors errors={errors.errors} />
             </div>
           )}
-
-          {success && (
-            <div className="mt-5 mx-5 p-3 bg-green-400 text-white rounded-md mb-3">
-              {success}
-            </div>
-          )}
         </div>
 
         <form onSubmit={handleSubmit}>
@@ -103,6 +95,7 @@ const EditAppointment: React.FC<IEditAppointmentProps> = ({
                   endDate={editData?.dateRange?.[1]}
                   dateFormat={"dd/MM/yyyy"}
                   open
+                  readOnly
                   name="date"
                   className="p-2 border border-indigo-400 focus:outline-none focus:border-indigo-700 duration:100 rounded-md w-full"
                 />

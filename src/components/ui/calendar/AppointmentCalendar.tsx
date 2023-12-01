@@ -4,11 +4,14 @@ import { IAppointment } from "../../../models/types";
 import FormButton from "../shared/FormButton";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import AppointmentCard from "../shared/card/AppointmentCard";
+import { axiosApi } from "../../../api/axios";
 
 dayjs.extend(customParseFormat);
 
 interface ICalendarProps {
   appointments: IAppointment[];
+  selected: IAppointment[];
+  setSelected: (selected: IAppointment[]) => void;
   onDelete: (appointment: IAppointment) => void;
   onEdit: (appointment: IAppointment) => void;
 }
@@ -21,13 +24,12 @@ interface ICalendarCell {
 
 const AppointmentCalendar: React.FC<ICalendarProps> = ({
   appointments,
+  selected,
+  setSelected,
   onDelete,
   onEdit,
 }) => {
   const [currentMonth, setCurrentMonth] = useState(dayjs());
-  const [appointmentsSelected, setAppointmentsSelected] = useState<
-    IAppointment[]
-  >([]);
 
   const goToPreviousMonth = () => {
     setCurrentMonth((prev) => prev.subtract(1, "month"));
@@ -37,13 +39,32 @@ const AppointmentCalendar: React.FC<ICalendarProps> = ({
     setCurrentMonth((prev) => prev.add(1, "month"));
   };
 
-  const handleClick = (appointments: ICalendarCell[]) => {
+  const getAppointment = async (id: string | undefined) => {
+    try {
+      const response = await axiosApi.get<IAppointment>(`appointment/${id}`);
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  };
+
+  const handleClick = async (appointments: ICalendarCell[]) => {
     const cell: IAppointment[][] = appointments.map(
       (value) => value.appointment
     );
 
     const apps: IAppointment[] = cell.flat(1);
-    setAppointmentsSelected(apps);
+
+    try {
+      const promises = apps.map((item) => getAppointment(item.id));
+      const results = await Promise.all(promises);
+
+      setSelected(results);
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
   };
 
   const [appointmentColors, setAppointmentColors] = useState<{
@@ -117,7 +138,7 @@ const AppointmentCalendar: React.FC<ICalendarProps> = ({
       calendarDays.push(
         <div>
           <div
-            key={j}
+            key={`day-of-week-${j}`}
             className="flex justify-center items-center md:h-12 font-bold h-6 md:w-32 w-16 my-3 mx-3 bg-gray-200"
           >
             {daysOfWeek[j]}
@@ -140,7 +161,7 @@ const AppointmentCalendar: React.FC<ICalendarProps> = ({
       ) {
         calendarDays.push(
           <div
-            key={i}
+            key={`calendar-day-${i}-${currentDate.format("DD-MM-YYYY")}`}
             className={`flex justify-center hover:scale-105 cursor-pointer hover:border-2 hover:border-indigo-400 items-center md:h-32 md:w-32 h-fit w-16 mx-3 my-3 ${
               currentDate.isSame(dayjs(), "day")
                 ? "bg-green-200"
@@ -154,9 +175,9 @@ const AppointmentCalendar: React.FC<ICalendarProps> = ({
               </span>
 
               <div className="mt-2">
-                {appointmentsForDay.map((value) => (
+                {appointmentsForDay.map((value, index) => (
                   <div
-                    key={value.color}
+                    key={`${value.color}-${value.appointment[0].id}-${index}`}
                     style={{ backgroundColor: value.color }}
                   >
                     {value.first.length > 0 ? (
@@ -186,7 +207,7 @@ const AppointmentCalendar: React.FC<ICalendarProps> = ({
       } else {
         calendarDays.push(
           <div
-            key={i}
+            key={`empty-calendar-day-${i}`}
             className="flex justify-center items-center md:h-32 md:w-32 h-16 w-16 bg-gray-100 my-3 mx-3"
           ></div>
         );
@@ -211,12 +232,12 @@ const AppointmentCalendar: React.FC<ICalendarProps> = ({
       </div>
 
       <div className="my-6">
-        {appointmentsSelected.length > 0 ? (
+        {selected.length > 0 ? (
           <div className="grid grid-cols-3 gap-10">
-            {appointmentsSelected.map((app) => (
+            {selected.map((app) => (
               <AppointmentCard
                 appointment={app}
-                key={app.id}
+                key={`appointment-${app.id}`}
                 onDelete={onDelete}
                 onEdit={onEdit}
               />

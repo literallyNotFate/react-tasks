@@ -17,14 +17,14 @@ import AppointmentCalendar from "../../ui/calendar/AppointmentCalendar";
 const Appointments: React.FC = () => {
   const [showCreate, setShowCreate] = useState<boolean>(false);
   const [showEdit, setShowEdit] = useState<boolean>(false);
-  const [success, setSuccess] = useState<string>("");
 
   const [appointments, setAppointments] = useState<IAppointment[]>([]);
+  const [selected, setSelected] = useState<IAppointment[]>([]);
+
   const [edit, setEdit] = useState<IAppointmentForm>();
-
   const [editId, setEditId] = useState<string>("");
-  const [errors, setErrors] = useState<IError>({ errors: [] });
 
+  const [errors, setErrors] = useState<IError>({ errors: [] });
   const [me, setMe] = useState<IUser>();
 
   useEffect(() => {
@@ -76,12 +76,10 @@ const Appointments: React.FC = () => {
     axiosApi
       .post("/appointment", data)
       .then((res) => {
-        setSuccess("Appointment created");
         setShowCreate(false);
-        console.log(res);
+        setAppointments((prev) => [...prev, res.data]);
       })
       .catch((err) => {
-        setSuccess("");
         console.log(err);
       });
   };
@@ -90,7 +88,16 @@ const Appointments: React.FC = () => {
     axiosApi
       .delete(`/appointment/${appointment.id}`)
       .then(() => {
-        console.log(`Deleted appointment with id: ${appointment.id}`);
+        const updatedAppointments: IAppointment[] = appointments.filter(
+          (app) => app.id !== appointment.id
+        );
+
+        const updatedSelected: IAppointment[] = selected.filter(
+          (app) => app.id !== appointment.id
+        );
+
+        setAppointments(updatedAppointments);
+        setSelected(updatedSelected);
       })
       .catch((err) => {
         console.log(err);
@@ -119,11 +126,26 @@ const Appointments: React.FC = () => {
       .patch(`/appointment/${editId}`, data)
       .then((res) => {
         setErrors({ errors: [] });
-        console.log(res);
-        setSuccess(`Edited appointment with id: ${res.data.id}`);
+        setShowEdit(false);
+
+        const updatedAppointments = appointments.map((item) => {
+          if (item.id === editId) {
+            return { ...item, ...res.data };
+          }
+          return item;
+        });
+
+        const updatedSelected = selected.map((item) => {
+          if (item.id === editId) {
+            return { ...item, ...res.data };
+          }
+          return item;
+        });
+
+        setAppointments(updatedAppointments);
+        setSelected(updatedSelected);
       })
       .catch((err) => {
-        setSuccess("");
         setErrors({ errors: err.response?.data.message });
       });
   };
@@ -145,6 +167,8 @@ const Appointments: React.FC = () => {
         <div className="mt-6">
           <AppointmentCalendar
             appointments={appointments}
+            selected={selected}
+            setSelected={setSelected}
             onDelete={onDelete}
             onEdit={onEdit}
           />
@@ -154,7 +178,6 @@ const Appointments: React.FC = () => {
           show={showCreate}
           setShow={setShowCreate}
           onCreate={onCreate}
-          success={success}
           me={me as IUser}
         />
 
@@ -162,7 +185,6 @@ const Appointments: React.FC = () => {
           show={showEdit}
           setShow={setShowEdit}
           edit={edit as IAppointmentForm}
-          success={success}
           editing={editing}
           id={editId}
           errors={errors}

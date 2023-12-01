@@ -22,7 +22,8 @@ const AppointmentCard: React.FC<IAppointmentCardProps> = ({
         <span className="font-bold">{appointment.endDate}</span>
       </h2>
       <h2>
-        For: {appointment.user.firstName} {appointment.user.lastName}
+        For: {appointment.user?.firstName || ""}{" "}
+        {appointment.user?.lastName || ""}
       </h2>
 
       <div className="mt-5 flex flex-col gap-3">
