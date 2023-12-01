@@ -6,6 +6,7 @@ import NewProduct from "./components/layout/pages/NewProduct";
 import ProductInspect from "./components/layout/pages/ProductInspect";
 import Navbar from "./components/layout/Navbar";
 import Appointments from "./components/layout/pages/Appointments";
+import ToastProvider from "./lib/context/ToastProvider";
 
 const AppRoutes = () => {
   const routes = useRoutes([
@@ -24,8 +25,10 @@ function App() {
   return (
     <div className="w-full">
       <BrowserRouter>
-        <Navbar />
-        <AppRoutes />
+        <ToastProvider>
+          <Navbar />
+          <AppRoutes />
+        </ToastProvider>
       </BrowserRouter>
     </div>
   );

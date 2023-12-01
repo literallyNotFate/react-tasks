@@ -13,6 +13,7 @@ import { axiosApi } from "../../../api/axios";
 import EditAppointment from "../../ui/edit/EditAppointment";
 import { parseDateFromString } from "../../../lib/utils";
 import AppointmentCalendar from "../../ui/calendar/AppointmentCalendar";
+import toast from "react-hot-toast";
 
 const Appointments: React.FC = () => {
   const [showCreate, setShowCreate] = useState<boolean>(false);
@@ -26,6 +27,8 @@ const Appointments: React.FC = () => {
 
   const [errors, setErrors] = useState<IError>({ errors: [] });
   const [me, setMe] = useState<IUser>();
+
+  const [formResetFlag, setFormResetFlag] = useState<boolean>(false);
 
   useEffect(() => {
     const getAppointments = () => {
@@ -76,11 +79,15 @@ const Appointments: React.FC = () => {
     axiosApi
       .post("/appointment", data)
       .then((res) => {
+        setErrors({ errors: [] });
         setShowCreate(false);
+        setFormResetFlag(true);
         setAppointments((prev) => [...prev, res.data]);
+
+        toast.success(`Appointment '${res.data.name}' created!`);
       })
       .catch((err) => {
-        console.log(err);
+        setErrors({ errors: err.response?.data.message });
       });
   };
 
@@ -98,9 +105,11 @@ const Appointments: React.FC = () => {
 
         setAppointments(updatedAppointments);
         setSelected(updatedSelected);
+
+        toast.success(`Appointment '${appointment.name}' deleted!`);
       })
       .catch((err) => {
-        console.log(err);
+        toast.error(`${err.response?.data.message}`);
       });
   };
 
@@ -115,6 +124,7 @@ const Appointments: React.FC = () => {
     };
 
     setEdit(editData);
+    setErrors({ errors: [] });
     setEditId(appointment.id);
     setShowEdit(true);
   };
@@ -144,6 +154,8 @@ const Appointments: React.FC = () => {
 
         setAppointments(updatedAppointments);
         setSelected(updatedSelected);
+
+        toast.success(`Appointment with ID: ${editId} edited!`);
       })
       .catch((err) => {
         setErrors({ errors: err.response?.data.message });
@@ -178,7 +190,10 @@ const Appointments: React.FC = () => {
           show={showCreate}
           setShow={setShowCreate}
           onCreate={onCreate}
+          errors={errors}
           me={me as IUser}
+          resetForm={formResetFlag}
+          setResetFormFlag={() => setFormResetFlag(false)}
         />
 
         <EditAppointment

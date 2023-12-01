@@ -1,31 +1,50 @@
-import { ChangeEvent, useState } from "react";
-import { IAppointmentForm, IModal, IUser } from "../../../models/types";
+import { ChangeEvent, useEffect, useState } from "react";
+import { IAppointmentForm, IError, IModal, IUser } from "../../../models/types";
 import FormButton from "../shared/FormButton";
 import FormInput from "../shared/FormInput";
 import Modal from "../shared/Modal";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import Errors from "../shared/Errors";
 
 interface ICreateAppointmentProps extends IModal {
   onCreate: (appointment: IAppointmentForm) => void;
   me: IUser | null;
+  errors: IError;
+  resetForm: boolean;
+  setResetFormFlag: () => void;
 }
 
 const CreateAppointment: React.FC<ICreateAppointmentProps> = ({
   show,
   setShow,
   onCreate,
+  errors,
   me,
+  resetForm,
+  setResetFormFlag,
 }) => {
   const [appointment, setAppointment] = useState<IAppointmentForm>({
     name: "",
     dateRange: [null, null],
   });
 
+  useEffect(() => {
+    if (resetForm) {
+      setAppointment({
+        name: "",
+        dateRange: [null, null],
+      });
+
+      setStartDate(null);
+      setEndDate(null);
+      setResetFormFlag();
+    }
+  }, [resetForm, setResetFormFlag]);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onCreate(appointment);
-    reset();
   };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -34,13 +53,6 @@ const CreateAppointment: React.FC<ICreateAppointmentProps> = ({
       ...prev,
       [name]: value,
     }));
-  };
-
-  const reset = () => {
-    setAppointment({
-      name: "",
-      dateRange: [null, null],
-    });
   };
 
   const [startDate, setStartDate] = useState<Date | null>(null);
@@ -63,6 +75,10 @@ const CreateAppointment: React.FC<ICreateAppointmentProps> = ({
   return (
     <>
       <Modal show={show} setShow={setShow}>
+        <div>
+          {errors.errors.length > 0 && <Errors errors={errors.errors} />}
+        </div>
+
         <form onSubmit={handleSubmit}>
           <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
             <FormInput
@@ -76,6 +92,7 @@ const CreateAppointment: React.FC<ICreateAppointmentProps> = ({
               <div className="flex flex-col gap-2 w-full">
                 <label htmlFor="date">Appointment Date</label>
                 <DatePicker
+                  popperPlacement="bottom-start"
                   selected={startDate}
                   onChange={handleDateChange}
                   selectsRange

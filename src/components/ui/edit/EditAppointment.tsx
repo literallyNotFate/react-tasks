@@ -68,11 +68,7 @@ const EditAppointment: React.FC<IEditAppointmentProps> = ({
     <>
       <Modal show={show} setShow={setShow}>
         <div>
-          {errors.errors.length > 0 && (
-            <div className="mx-5 mt-5">
-              <Errors errors={errors.errors} />
-            </div>
-          )}
+          {errors.errors.length > 0 && <Errors errors={errors.errors} />}
         </div>
 
         <form onSubmit={handleSubmit}>

@@ -31,14 +31,6 @@ const useCurrency = () => {
     fetchRate();
   }, []);
 
-  // const convert = (amount: number): number => {
-  //   if (rate !== null) {
-  //     return amount * rate;
-  //   }
-
-  //   return 0;
-  // };
-
   const convert = (amount: number, from: string, to: string) => {
     return (amount / rates[from]) * rates[to];
   };
