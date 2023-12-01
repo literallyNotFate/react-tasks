@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import dayjs from "dayjs";
 import { IAppointment } from "../../../models/types";
 import FormButton from "../shared/FormButton";
@@ -11,6 +11,12 @@ interface ICalendarProps {
   appointments: IAppointment[];
   onDelete: (appointment: IAppointment) => void;
   onEdit: (appointment: IAppointment) => void;
+}
+
+interface ICalendarCell {
+  appointment: IAppointment[];
+  color: string;
+  first: IAppointment[];
 }
 
 const AppointmentCalendar: React.FC<ICalendarProps> = ({
@@ -31,8 +37,47 @@ const AppointmentCalendar: React.FC<ICalendarProps> = ({
     setCurrentMonth((prev) => prev.add(1, "month"));
   };
 
-  const handleClick = (appointments: IAppointment[]) => {
-    setAppointmentsSelected(appointments);
+  const handleClick = (appointments: ICalendarCell[]) => {
+    const cell: IAppointment[][] = appointments.map(
+      (value) => value.appointment
+    );
+
+    const apps: IAppointment[] = cell.flat(1);
+    setAppointmentsSelected(apps);
+  };
+
+  const [appointmentColors, setAppointmentColors] = useState<{
+    [key: string]: string;
+  }>({});
+
+  const generateAppointmentColors = (appointments: IAppointment[]): void => {
+    const colors: { [key: string]: string } = {};
+
+    appointments.forEach((appointment) => {
+      if (!appointmentColors[appointment.id]) {
+        colors[appointment.id] = `hsla(${~~(
+          360 * Math.random()
+        )}, 70%, 72%, 0.8)`;
+      }
+    });
+
+    setAppointmentColors((prevColors) => ({ ...prevColors, ...colors }));
+  };
+
+  useEffect(() => {
+    generateAppointmentColors(appointments);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [appointments]);
+
+  const isFirst = (
+    day: number,
+    appointments: IAppointment[]
+  ): IAppointment[] => {
+    const first = appointments.filter(
+      (value) => dayjs(value.startDate, "DD-MM-YYYY").date() === day
+    );
+
+    return first;
   };
 
   const renderCalendar = () => {
@@ -45,61 +90,35 @@ const AppointmentCalendar: React.FC<ICalendarProps> = ({
     const calendarDays: JSX.Element[] = [];
     const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-    const appointmentsMap: { [key: string]: IAppointment[] } = {};
+    const appointmentsMap: { [key: string]: ICalendarCell[] } = {};
 
     appointments.forEach((appointment) => {
       const startDate = dayjs(appointment.startDate, "DD-MM-YYYY");
-      //const endDate = dayjs(appointment.endDate, "DD-MM-YYYY");
-      const key = startDate.format("DD-MM-YYYY");
+      const endDate = dayjs(appointment.endDate, "DD-MM-YYYY");
+      const dateDiff = endDate.diff(startDate, "day") + 1;
 
-      if (!appointmentsMap[key]) {
-        appointmentsMap[key] = [];
+      for (let i = 0; i < dateDiff; i++) {
+        const currentDate = startDate.add(i, "day");
+        const key = currentDate.format("DD-MM-YYYY");
+
+        if (!appointmentsMap[key]) {
+          appointmentsMap[key] = [];
+        }
+
+        appointmentsMap[key].push({
+          appointment: [appointment],
+          color: appointmentColors[appointment.id],
+          first: isFirst(currentDate.date(), [appointment]),
+        });
       }
-
-      appointmentsMap[key].push(appointment);
     });
-
-    // const appointmentsMap: {
-    //   [key: string]: {
-    //     apps: IAppointment[];
-    //     color: string;
-    //   };
-    // } = {};
-
-    // appointments.forEach((appointment) => {
-    //   const startDate = dayjs(appointment.startDate, "DD-MM-YYYY");
-    //   const endDate = dayjs(appointment.endDate, "DD-MM-YYYY");
-
-    //   const dateDiff = endDate.diff(startDate, "day") + 1;
-    //   const color = "#" + Math.floor(Math.random() * 16777215).toString(16);
-
-    //   for (let i = 0; i < dateDiff; i++) {
-    //     const currentDate = startDate.add(i, "day");
-    //     const key = currentDate.format("DD-MM-YYYY");
-
-    //     if (!appointmentsMap[key]) {
-    //       appointmentsMap[key] = {
-    //         apps: [],
-    //         color: "#C8C8C8",
-    //       };
-    //     }
-
-    //     // const data = {
-    //     //   apps: appointment,
-    //     //   color: color,
-    //     // };
-
-    //     appointmentsMap[key].apps = [appointment];
-    //     appointmentsMap[key].color = color;
-    //   }
-    // });
 
     for (let j = 0; j < daysOfWeek.length; j++) {
       calendarDays.push(
         <div>
           <div
             key={j}
-            className="flex justify-center items-center md:h-12 font-bold h-6 md:w-32 w-16 mx-3 my-3 bg-gray-200"
+            className="flex justify-center items-center md:h-12 font-bold h-6 md:w-32 w-16 my-3 mx-3 bg-gray-200"
           >
             {daysOfWeek[j]}
           </div>
@@ -122,39 +141,45 @@ const AppointmentCalendar: React.FC<ICalendarProps> = ({
         calendarDays.push(
           <div
             key={i}
-            className={`flex justify-center hover:scale-105 cursor-pointer hover:border-2 hover:border-indigo-400 items-center md:h-32 md:w-32 h-16 w-16 mx-3 my-3 relative ${
+            className={`flex justify-center hover:scale-105 cursor-pointer hover:border-2 hover:border-indigo-400 items-center md:h-32 md:w-32 h-fit w-16 mx-3 my-3 ${
               currentDate.isSame(dayjs(), "day")
                 ? "bg-green-200"
                 : "bg-gray-200"
             }`}
             onClick={() => handleClick(appointmentsForDay)}
           >
-            <div>
-              <span className="text-xl absolute top-0 left-0 m-3 font-bold">
+            <div className="w-full h-full">
+              <span className="text-xl font-bold">
                 {currentDate.format("D")}
-
-                <div className="mt-2">
-                  {appointmentsForDay.map((appointment) => (
-                    <div key={appointment.id}>
-                      <span className="text-sm font-medium">
-                        {appointment.name}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-
-                {/* {appointmentsForDay.apps?.length > 0 ? (
-                  <div className="mt-2">
-                    {appointmentsForDay.apps.map((appointment) => (
-                      <div key={appointment.id}>
-                        <span className="text-sm font-medium">
-                          {appointment.name}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                ) : null} */}
               </span>
+
+              <div className="mt-2">
+                {appointmentsForDay.map((value) => (
+                  <div
+                    key={value.color}
+                    style={{ backgroundColor: value.color }}
+                  >
+                    {value.first.length > 0 ? (
+                      value.first.map((f) => (
+                        <span
+                          className="font-medium text-sm"
+                          style={{ color: "black" }}
+                          key={f.id}
+                        >
+                          {value.appointment[0].name}
+                        </span>
+                      ))
+                    ) : (
+                      <span
+                        className="font-medium text-sm"
+                        style={{ opacity: 0 }}
+                      >
+                        {value.appointment[0].name}
+                      </span>
+                    )}
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         );
@@ -162,7 +187,7 @@ const AppointmentCalendar: React.FC<ICalendarProps> = ({
         calendarDays.push(
           <div
             key={i}
-            className="flex justify-center items-center md:h-32 md:w-32 h-16 w-16 mx-3 my-3 relative bg-gray-100"
+            className="flex justify-center items-center md:h-32 md:w-32 h-16 w-16 bg-gray-100 my-3 mx-3"
           ></div>
         );
       }
