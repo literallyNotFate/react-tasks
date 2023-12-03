@@ -2,21 +2,30 @@ import { useEffect, useMemo, useState } from "react";
 import { axiosApi } from "../../../api/axios";
 import { ICartItem, IProduct } from "../../../models/types";
 import ProductCard from "../../ui/shared/card/ProductCard";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Cart from "../../ui/Cart";
 import FormButton from "../../ui/shared/FormButton";
 import useCurrency from "../../../lib/hooks/useCurrency";
+import Loading from "../../ui/shared/Loading";
+import toast from "react-hot-toast/headless";
 
 const Products: React.FC = () => {
   const [products, setProducts] = useState<IProduct[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const getAll = () => {
+    const getAll = async () => {
+      setLoading(true);
       axiosApi
-        .get("/product")
-        .then((res) => setProducts(res.data))
-        .catch((err) => console.log(err));
+        .get<IProduct[]>("/product")
+        .then((res) => {
+          setProducts(res.data);
+        })
+        .catch((err) => {
+          toast.error(err);
+        })
+        .finally(() => setLoading(false));
     };
 
     getAll();
@@ -67,7 +76,7 @@ const Products: React.FC = () => {
     }
   };
 
-  const { convert, error } = useCurrency();
+  const { convert } = useCurrency();
 
   const total = useMemo(() => {
     let total: number = 0;
@@ -89,24 +98,30 @@ const Products: React.FC = () => {
     return cartItems.reduce((total, item) => total + item.quantity, 0);
   }, [cartItems]);
 
+  if (loading) {
+    return <Loading />;
+  }
+
   return (
     <>
-      <div className="p-12 shadow-lg rounded-lg bg-white">
+      <div className="p-12 bg-black w-full md:w-3/4 border-2 border-gray-500 mx-auto">
         <div>
-          <h1 className="mb-6 font-bold text-3xl">
-            Products ({products.length})
-          </h1>
-          <div className="w-1/3 mb-6">
-            <FormButton onClick={() => setShowCart(true)}>
-              Open Cart ({quantity})
-            </FormButton>
-          </div>
+          {products.length > 0 ? (
+            <div>
+              <h1 className="mb-6 font-bold text-3xl text-white">
+                Products ({products.length})
+              </h1>
+              <div className="flex gap-5 mb-6">
+                <FormButton href="/products/new" variant="danger">
+                  Create
+                </FormButton>
 
-          {error && <div>Error: {error}</div>}
+                <FormButton onClick={() => setShowCart(true)} variant="success">
+                  Open Cart ({quantity})
+                </FormButton>
+              </div>
 
-          <div>
-            {products.length > 0 ? (
-              <div className="grid grid-cols-3 gap-10">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
                 {products.map((product) => (
                   <ProductCard
                     product={product}
@@ -116,10 +131,15 @@ const Products: React.FC = () => {
                   />
                 ))}
               </div>
-            ) : (
-              <h1 className="text-3xl font-bold text-center">No data yet!</h1>
-            )}
-          </div>
+            </div>
+          ) : (
+            <h1 className="text-3xl font-bold text-center">
+              No data yet!{" "}
+              <Link to="/products/new" className="font-bold">
+                Create product!
+              </Link>
+            </h1>
+          )}
         </div>
 
         <Cart

@@ -72,7 +72,7 @@ const EditAppointment: React.FC<IEditAppointmentProps> = ({
         </div>
 
         <form onSubmit={handleSubmit}>
-          <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+          <div className="px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
             <FormInput
               name="name"
               onChange={handleChange}
@@ -93,7 +93,7 @@ const EditAppointment: React.FC<IEditAppointmentProps> = ({
                   open
                   readOnly
                   name="date"
-                  className="p-2 border border-indigo-400 focus:outline-none focus:border-indigo-700 duration:100 rounded-md w-full"
+                  className="flex h-10 w-full text-white rounded-md border border-white bg-transparent py-2 px-3 text-sm placeholder:text-white focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 focus:border-red-500"
                 />
               </div>
 
@@ -108,13 +108,12 @@ const EditAppointment: React.FC<IEditAppointmentProps> = ({
             </div>
           </div>
 
-          <div className="bg-gray-50 flex justify-center py-3 px-3 gap-3 flex-row-reverse">
-            <FormButton type="submit">Edit</FormButton>
+          <div className="flex py-3 px-3 gap-3 flex-row-reverse">
+            <FormButton type="submit" variant="primary">
+              Edit
+            </FormButton>
 
-            <FormButton
-              onClick={() => setShow(false)}
-              className="bg-gray-400 hover:bg-gray-500"
-            >
+            <FormButton onClick={() => setShow(false)} variant="danger">
               Cancel
             </FormButton>
           </div>

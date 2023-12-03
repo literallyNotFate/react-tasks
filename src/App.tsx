@@ -7,15 +7,19 @@ import ProductInspect from "./components/layout/pages/ProductInspect";
 import Navbar from "./components/layout/Navbar";
 import Appointments from "./components/layout/pages/Appointments";
 import ToastProvider from "./lib/context/ToastProvider";
+import Home from "./components/layout/pages/Home";
+import NotFound from "./components/layout/pages/NotFound";
 
 const AppRoutes = () => {
   const routes = useRoutes([
-    { path: "/", element: <Register /> },
+    { path: "/", element: <Home /> },
+    { path: "/register", element: <Register /> },
     { path: "/login", element: <Login /> },
     { path: "/products", element: <Products /> },
     { path: "/products/new", element: <NewProduct /> },
     { path: "/products/:id", element: <ProductInspect /> },
     { path: "/appointments", element: <Appointments /> },
+    { path: "*", element: <NotFound /> },
   ]);
 
   return routes;
@@ -23,14 +27,14 @@ const AppRoutes = () => {
 
 function App() {
   return (
-    <div className="w-full">
+    <>
       <BrowserRouter>
         <ToastProvider>
           <Navbar />
           <AppRoutes />
         </ToastProvider>
       </BrowserRouter>
-    </div>
+    </>
   );
 }
 

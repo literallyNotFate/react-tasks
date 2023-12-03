@@ -36,14 +36,18 @@ const Cart: React.FC<ICartProps> = ({
               <label htmlFor="target">Select currency to convert total</label>
               <select
                 id="target"
-                className="p-2 border border-indigo-400 focus:outline-none focus:border-indigo-700 duration:100 rounded-md w-full"
+                className="flex h-10 w-full text-white rounded-md border border-white bg-transparent py-2 px-3 text-sm placeholder:text-white focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 focus:border-red-500"
                 value={target}
                 onChange={(e: ChangeEvent<HTMLSelectElement>) => {
                   setTarget(e.target.value);
                 }}
               >
                 {CURRENCIES.map((code) => (
-                  <option key={code} value={code}>
+                  <option
+                    key={code}
+                    value={code}
+                    className="bg-black text-white"
+                  >
                     {code}
                   </option>
                 ))}
@@ -61,15 +65,15 @@ const Cart: React.FC<ICartProps> = ({
                     Quantity: {item.quantity}
                   </p>
 
-                  <div className="flex">
+                  <div className="flex gap-2">
                     <FormButton
-                      className="bg-green-600 hover:bg-green-700 px-3 py-1 rounded mr-2"
+                      variant="success"
                       onClick={() => add(item.product)}
                     >
                       +
                     </FormButton>
                     <FormButton
-                      className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+                      variant="danger"
                       onClick={() => remove(item.product)}
                     >
                       -
@@ -89,11 +93,8 @@ const Cart: React.FC<ICartProps> = ({
           </h1>
         )}
 
-        <div className="bg-gray-50 py-3 px-3">
-          <FormButton
-            onClick={() => setShow(false)}
-            className="bg-gray-300 hover:bg-gray-400"
-          >
+        <div className="py-3 px-3 flex flex-row-reverse">
+          <FormButton onClick={() => setShow(false)} variant="danger">
             Close
           </FormButton>
         </div>

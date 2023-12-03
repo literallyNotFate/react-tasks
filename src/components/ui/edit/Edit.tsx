@@ -11,14 +11,13 @@ import { axiosApi } from "../../../api/axios";
 import Errors from "../shared/Errors";
 import Modal from "../shared/Modal";
 import { CURRENCIES } from "../../../lib/constants";
+import toast from "react-hot-toast";
 
 interface IEditProps extends IModal {
   edit: IProductForm;
   onEdit: (updatedData: IProductForm) => void;
-  success: string;
   errors: IError;
   setErrors: (value: IError) => void;
-  setSuccess: (value: string) => void;
 }
 
 const Edit: React.FC<IEditProps> = ({
@@ -26,10 +25,8 @@ const Edit: React.FC<IEditProps> = ({
   setShow,
   edit,
   onEdit,
-  success,
   errors,
   setErrors,
-  setSuccess,
 }) => {
   const [editData, setEditData] = useState<IProductForm>({ ...edit });
 
@@ -54,7 +51,7 @@ const Edit: React.FC<IEditProps> = ({
         .then((res) =>
           setBrands(res.data.map((raw) => ({ id: raw.id, name: raw.name })))
         )
-        .catch((err) => console.log(err));
+        .catch((err) => toast.error(err));
     };
 
     getBrands();
@@ -67,7 +64,6 @@ const Edit: React.FC<IEditProps> = ({
 
   const handleClose = () => {
     setErrors({ errors: [] });
-    setSuccess("");
     setShow(false);
   };
 
@@ -75,21 +71,11 @@ const Edit: React.FC<IEditProps> = ({
     <>
       <Modal show={show} setShow={setShow}>
         <div>
-          {errors.errors.length > 0 && (
-            <div className="mx-5 mt-5">
-              <Errors errors={errors.errors} />
-            </div>
-          )}
-
-          {success && (
-            <div className="mt-5 mx-5 p-3 bg-green-400 text-white rounded-md mb-3">
-              {success}
-            </div>
-          )}
+          {errors.errors.length > 0 && <Errors errors={errors.errors} />}
         </div>
 
         <form onSubmit={handleSubmit}>
-          <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+          <div className="px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
             <div className="mb-4">
               <div className="flex flex-col gap-2">
                 <FormInput
@@ -112,7 +98,7 @@ const Edit: React.FC<IEditProps> = ({
                     <label htmlFor="currency">Brand</label>
                     <select
                       id="currency"
-                      className="p-2 border border-indigo-400 focus:outline-none focus:border-indigo-700 duration:100 rounded-md w-full"
+                      className="flex h-10 w-full text-white rounded-md border border-white bg-transparent py-2 px-3 text-sm placeholder:text-white focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 focus:border-red-500"
                       value={editData.currency}
                       onChange={(e: ChangeEvent<HTMLSelectElement>) => {
                         setEditData((prev) => ({
@@ -122,7 +108,11 @@ const Edit: React.FC<IEditProps> = ({
                       }}
                     >
                       {CURRENCIES.map((code) => (
-                        <option key={code} value={code}>
+                        <option
+                          key={code}
+                          value={code}
+                          className="bg-black text-white"
+                        >
                           {code}
                         </option>
                       ))}
@@ -133,7 +123,7 @@ const Edit: React.FC<IEditProps> = ({
                     <label htmlFor="brands">Brand</label>
                     <select
                       id="brands"
-                      className="p-2 border border-indigo-400 focus:outline-none focus:border-indigo-700 duration:100 rounded-md w-full"
+                      className="flex h-10 w-full text-white rounded-md border border-white bg-transparent py-2 px-3 text-sm placeholder:text-white focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 focus:border-red-500"
                       value={editData.brandId}
                       onChange={(e: ChangeEvent<HTMLSelectElement>) => {
                         setEditData((prev) => ({
@@ -143,7 +133,11 @@ const Edit: React.FC<IEditProps> = ({
                       }}
                     >
                       {brands.map((brand) => (
-                        <option key={brand.id} value={brand.id}>
+                        <option
+                          key={brand.id}
+                          value={brand.id}
+                          className="bg-black text-white"
+                        >
                           {brand.name}
                         </option>
                       ))}
@@ -156,7 +150,7 @@ const Edit: React.FC<IEditProps> = ({
                   <textarea
                     name="description"
                     id="description"
-                    className="p-2 border border-indigo-400 focus:outline-none focus:border-indigo-700 duration:100 rounded-md w-full h-[150px]"
+                    className="flex h-[150px]  w-full text-white rounded-md border border-white bg-transparent py-2 px-3 text-sm placeholder:text-white focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 focus:border-red-500"
                     style={{ resize: "none" }}
                     value={editData.description || ""}
                     onChange={(e: ChangeEvent<HTMLTextAreaElement>) => {
@@ -170,13 +164,13 @@ const Edit: React.FC<IEditProps> = ({
               </div>
             </div>
           </div>
-          <div className="bg-gray-50 flex justify-center py-3 px-3 gap-3 flex-row-reverse">
-            <FormButton type="submit">Edit</FormButton>
 
-            <FormButton
-              onClick={() => handleClose()}
-              className="bg-gray-300 hover:bg-gray-400"
-            >
+          <div className="flex py-3 px-3 gap-3 flex-row-reverse">
+            <FormButton type="submit" variant="primary">
+              Edit
+            </FormButton>
+
+            <FormButton onClick={() => handleClose()} variant="danger">
               Cancel
             </FormButton>
           </div>

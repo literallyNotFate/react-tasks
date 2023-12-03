@@ -13,26 +13,23 @@ const AppointmentCard: React.FC<IAppointmentCardProps> = ({
   onDelete,
 }) => {
   return (
-    <div className="p-4 hover:scale-105 duration-100 border border-black rounded-lg cursor-pointer">
-      <h1 className="text-2xl text-center text-indigo-400 underline">
-        {appointment.name}
-      </h1>
-      <h2>
+    <div className="p-4 hover:scale-105 duration-100 border-2 border-gray-500 bg-[#2d2d2d]cursor-pointer">
+      <h1 className="text-3xl text-white font-bold mb-5">{appointment.name}</h1>
+      <h2 className="text-white">
         From <span className="font-bold">{appointment.startDate}</span> to{" "}
         <span className="font-bold">{appointment.endDate}</span>
       </h2>
-      <h2>
+      <h2 className="text-white italic">
         For: {appointment.user?.firstName || ""}{" "}
         {appointment.user?.lastName || ""}
       </h2>
 
       <div className="mt-5 flex flex-col gap-3">
-        <FormButton onClick={() => onEdit(appointment)}>Edit</FormButton>
+        <FormButton onClick={() => onEdit(appointment)} variant="success">
+          Edit
+        </FormButton>
 
-        <FormButton
-          onClick={() => onDelete(appointment)}
-          className="bg-red-500 hover:bg-red-600"
-        >
+        <FormButton onClick={() => onDelete(appointment)} variant="danger">
           Delete
         </FormButton>
       </div>

@@ -101,6 +101,8 @@ const AppointmentCalendar: React.FC<ICalendarProps> = ({
     return first;
   };
 
+  const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
   const renderCalendar = () => {
     const startOfMonth = currentMonth.startOf("month");
     const endOfMonth = currentMonth.endOf("month");
@@ -108,10 +110,10 @@ const AppointmentCalendar: React.FC<ICalendarProps> = ({
     const endDate = endOfMonth.endOf("week");
     const totalDays = endDate.diff(startDate, "day") + 1;
 
-    const calendarDays: JSX.Element[] = [];
-    const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-
     const appointmentsMap: { [key: string]: ICalendarCell[] } = {};
+
+    const calendarRows: JSX.Element[] = [];
+    let weekDays: JSX.Element[] = [];
 
     appointments.forEach((appointment) => {
       const startDate = dayjs(appointment.startDate, "DD-MM-YYYY");
@@ -134,24 +136,18 @@ const AppointmentCalendar: React.FC<ICalendarProps> = ({
       }
     });
 
-    for (let j = 0; j < daysOfWeek.length; j++) {
-      calendarDays.push(
-        <div>
-          <div
-            key={`day-of-week-${j}`}
-            className="flex justify-center items-center md:h-12 font-bold h-6 md:w-32 w-16 my-3 mx-3 bg-gray-200"
-          >
-            {daysOfWeek[j]}
-          </div>
-        </div>
-      );
-    }
-
     for (let i = 0; i < totalDays; i++) {
       const currentDate = startDate.add(i, "day");
 
       const appointmentsForDay =
         appointmentsMap[currentDate.format("DD-MM-YYYY")] || [];
+
+      if (weekDays.length === 7) {
+        calendarRows.push(
+          <tr key={`calendar-row-${calendarRows.length}`}>{weekDays}</tr>
+        );
+        weekDays = [];
+      }
 
       if (
         (currentDate.isSame(startOfMonth, "day") ||
@@ -159,22 +155,22 @@ const AppointmentCalendar: React.FC<ICalendarProps> = ({
         (currentDate.isSame(endOfMonth, "day") ||
           currentDate.isBefore(endOfMonth, "day"))
       ) {
-        calendarDays.push(
-          <div
+        weekDays.push(
+          <td
             key={`calendar-day-${i}-${currentDate.format("DD-MM-YYYY")}`}
-            className={`flex justify-center hover:scale-105 cursor-pointer hover:border-2 hover:border-indigo-400 items-center md:h-32 md:w-32 h-fit w-16 mx-3 my-3 ${
+            className={`cursor-pointer hover:border hover:border-red-500 w-32 h-32 ${
               currentDate.isSame(dayjs(), "day")
-                ? "bg-green-200"
-                : "bg-gray-200"
+                ? "bg-green-200 text-black"
+                : "bg-gray-900 text-white"
             }`}
             onClick={() => handleClick(appointmentsForDay)}
           >
             <div className="w-full h-full">
-              <span className="text-xl font-bold">
+              <span className="text-lg font-bold">
                 {currentDate.format("D")}
               </span>
 
-              <div className="mt-2">
+              <div className="mt-2 text-center">
                 {appointmentsForDay.map((value, index) => (
                   <div
                     key={`${value.color}-${value.appointment[0].id}-${index}`}
@@ -202,32 +198,35 @@ const AppointmentCalendar: React.FC<ICalendarProps> = ({
                 ))}
               </div>
             </div>
-          </div>
+          </td>
         );
       } else {
-        calendarDays.push(
-          <div
-            key={`empty-calendar-day-${i}`}
-            className="flex justify-center items-center md:h-32 md:w-32 h-16 w-16 bg-gray-100 my-3 mx-3"
-          ></div>
+        weekDays.push(
+          <td key={`empty-calendar-day-${i}`} className="bg-black"></td>
         );
       }
     }
 
-    return calendarDays;
+    if (weekDays.length > 0) {
+      calendarRows.push(
+        <tr key={`calendar-row-${calendarRows.length}`}>{weekDays}</tr>
+      );
+    }
+
+    return calendarRows;
   };
 
   return (
     <div className="flex flex-col">
-      <div className="flex items-center mb-4 gap-5 w-1/2 mx-auto">
+      <div className="flex items-center mb-4 gap-5 mx-auto">
         <FormButton className="mr-2 w-fit" onClick={goToPreviousMonth}>
-          {"<"}
+          Previous
         </FormButton>
-        <h1 className="text-3xl text-center font-bold w-[300px]">
+        <h1 className="text-lg md:text-3xl text-center font-bold text-white">
           {currentMonth.format("MMMM YYYY")}
         </h1>
         <FormButton className="ml-2 w-fit" onClick={goToNextMonth}>
-          {">"}
+          Next
         </FormButton>
       </div>
 
@@ -246,7 +245,23 @@ const AppointmentCalendar: React.FC<ICalendarProps> = ({
         ) : null}
       </div>
 
-      <div className="flex flex-wrap justify-center">{renderCalendar()}</div>
+      <div className="overflow-x-hidden">
+        <table className="table-auto">
+          <thead>
+            <tr>
+              {daysOfWeek.map((day, index) => (
+                <th
+                  key={`day-of-week-${index}`}
+                  className="font-bold bg-black text-white p-3"
+                >
+                  {day}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>{renderCalendar()}</tbody>
+        </table>
+      </div>
     </div>
   );
 };

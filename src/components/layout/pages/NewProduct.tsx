@@ -6,6 +6,7 @@ import { IProductForm, IError, IBrandPartial } from "../../../models/types";
 import Errors from "../../ui/shared/Errors";
 import { useNavigate } from "react-router-dom";
 import { CURRENCIES } from "../../../lib/constants";
+import toast from "react-hot-toast/headless";
 
 const NewProduct: React.FC = () => {
   const navigate = useNavigate();
@@ -33,7 +34,6 @@ const NewProduct: React.FC = () => {
   }, [brands]);
 
   const [errors, setErrors] = useState<IError>({ errors: [] });
-  const [success, setSuccess] = useState<string>("");
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -50,21 +50,17 @@ const NewProduct: React.FC = () => {
       .post("/product", product)
       .then((res) => {
         setErrors({ errors: [] });
-        setSuccess(res.statusText);
+        toast.success(res.statusText);
 
-        setTimeout(() => {
-          reset();
-        }, 1000);
+        reset();
 
-        setSuccess("");
         navigate("/products", { replace: true });
       })
       .catch((err) => {
-        setSuccess("");
-        if (err.response?.data.message) {
+        if (Array.isArray(err.response?.data.message)) {
           setErrors({ errors: err.response?.data.message });
-        } else if (err.response?.data) {
-          setErrors({ errors: [err.response?.data] });
+        } else {
+          setErrors({ errors: [err.response?.data.message] });
         }
       });
   };
@@ -83,22 +79,16 @@ const NewProduct: React.FC = () => {
   return (
     <>
       <form
-        className="p-12 shadow-lg rounded-lg bg-white"
+        className="p-12 bg-black w-full md:w-3/4 border-2 border-gray-500 mx-auto"
         onSubmit={handleSubmit}
       >
-        <h1 className="text-center text-4xl font-bold text-indigo-500 mb-7">
-          Create Product
-        </h1>
+        <h1 className="text-4xl font-bold text-white mb-7">Create Product</h1>
 
-        {errors.errors.length > 0 && <Errors errors={errors.errors} />}
+        <div className="my-6">
+          {errors.errors.length > 0 && <Errors errors={errors.errors} />}
+        </div>
 
-        {success && (
-          <div className="p-3 bg-green-400 text-white rounded-md mb-3">
-            {success}
-          </div>
-        )}
-
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-5">
           <FormInput
             name="name"
             value={product.name}
@@ -116,10 +106,12 @@ const NewProduct: React.FC = () => {
             />
 
             <div className="flex flex-col gap-2 w-full">
-              <label htmlFor="currency">Currency</label>
+              <label htmlFor="currency" className="text-white text-lg">
+                Currency
+              </label>
               <select
                 id="currency"
-                className="p-2 border border-indigo-400 focus:outline-none focus:border-indigo-700 duration:100 rounded-md w-full"
+                className="flex h-10 w-full text-white rounded-md border border-white bg-transparent py-2 px-3 text-sm placeholder:text-white focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 focus:border-red-500"
                 value={product.currency}
                 onChange={(e: ChangeEvent<HTMLSelectElement>) => {
                   setProduct((prev) => ({
@@ -129,7 +121,11 @@ const NewProduct: React.FC = () => {
                 }}
               >
                 {CURRENCIES.map((code) => (
-                  <option key={code} value={code}>
+                  <option
+                    key={code}
+                    value={code}
+                    className="bg-black text-white"
+                  >
                     {code}
                   </option>
                 ))}
@@ -137,10 +133,12 @@ const NewProduct: React.FC = () => {
             </div>
 
             <div className="flex flex-col gap-2 w-full">
-              <label htmlFor="brands">Brand</label>
+              <label htmlFor="brands" className="text-white text-lg">
+                Brand
+              </label>
               <select
                 id="brands"
-                className="p-2 border border-indigo-400 focus:outline-none focus:border-indigo-700 duration:100 rounded-md w-full"
+                className="flex h-10 w-full text-white rounded-md border border-white bg-transparent py-2 px-3 text-sm placeholder:text-white focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 focus:border-red-500"
                 value={product.brandId}
                 onChange={(e: ChangeEvent<HTMLSelectElement>) => {
                   setProduct((prev) => ({
@@ -150,7 +148,11 @@ const NewProduct: React.FC = () => {
                 }}
               >
                 {brands.map((brand) => (
-                  <option key={brand.id} value={brand.id}>
+                  <option
+                    key={brand.id}
+                    value={brand.id}
+                    className="bg-black text-white"
+                  >
                     {brand.name}
                   </option>
                 ))}
@@ -159,11 +161,13 @@ const NewProduct: React.FC = () => {
           </div>
 
           <div className="flex flex-col gap-2 w-full">
-            <label htmlFor="description">Description</label>
+            <label htmlFor="description" className="text-white text-lg">
+              Description
+            </label>
             <textarea
               name="description"
               id="description"
-              className="p-2 border border-indigo-400 focus:outline-none focus:border-indigo-700 duration:100 rounded-md w-full h-[150px]"
+              className="flex h-[150px]  w-full text-white rounded-md border border-white bg-transparent py-2 px-3 text-sm placeholder:text-white focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 focus:border-red-500"
               style={{ resize: "none" }}
               value={product.description}
               onChange={(e: ChangeEvent<HTMLTextAreaElement>) => {

@@ -14,6 +14,7 @@ import EditAppointment from "../../ui/edit/EditAppointment";
 import { parseDateFromString } from "../../../lib/utils";
 import AppointmentCalendar from "../../ui/calendar/AppointmentCalendar";
 import toast from "react-hot-toast";
+import Loading from "../../ui/shared/Loading";
 
 const Appointments: React.FC = () => {
   const [showCreate, setShowCreate] = useState<boolean>(false);
@@ -29,13 +30,16 @@ const Appointments: React.FC = () => {
   const [me, setMe] = useState<IUser>();
 
   const [formResetFlag, setFormResetFlag] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     const getAppointments = () => {
+      setLoading(true);
       axiosApi
         .get<IAppointment[]>("/appointment")
         .then((res) => setAppointments(res.data))
-        .catch((err) => console.log(err));
+        .catch((err) => toast.error(err))
+        .finally(() => setLoading(false));
     };
 
     const getMe = () => {
@@ -162,16 +166,20 @@ const Appointments: React.FC = () => {
       });
   };
 
+  if (loading) {
+    return <Loading />;
+  }
+
   return (
     <>
-      <div className="p-12 shadow-lg rounded-lg bg-white flex flex-col gap-5">
+      <div className="p-12 bg-black w-full md:w-3/4 border-2 border-gray-500 mx-auto  flex flex-col gap-5">
         <div>
-          <h1 className="text-center text-4xl font-bold text-indigo-500 mb-7">
+          <h1 className="text-4xl font-bold text-white mb-7">
             All Appointments
           </h1>
         </div>
         <div className="w-64">
-          <FormButton onClick={() => setShowCreate(true)}>
+          <FormButton onClick={() => setShowCreate(true)} variant="success">
             Create an appointment
           </FormButton>
         </div>

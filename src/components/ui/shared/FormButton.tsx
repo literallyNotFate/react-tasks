@@ -1,23 +1,34 @@
-import React, { ReactNode, ButtonHTMLAttributes } from "react";
+import { VariantProps } from "class-variance-authority";
+import { cn } from "../../../lib/utils";
+import * as React from "react";
+import { Link } from "react-router-dom";
+import { variants } from "../../../lib/constants";
 
-interface IButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  children?: ReactNode;
-  className?: string;
+interface IButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof variants> {
+  href?: string;
 }
 
-const defaultStyles: string =
-  "p-2 border text-white bg-indigo-400 focus:outline-none hover:bg-indigo-700 duration:100 rounded-md w-full";
-
-const FormButton: React.FC<IButtonProps> = ({
-  children,
-  className,
-  ...props
-}) => {
-  return (
-    <button className={`${defaultStyles} ${className}`} {...props}>
-      {children}
-    </button>
-  );
-};
+const FormButton = React.forwardRef<HTMLButtonElement, IButtonProps>(
+  ({ className, children, href, variant, size, ...props }, ref) => {
+    if (href) {
+      return (
+        <Link to={href} className={cn(variants({ variant, size, className }))}>
+          {children}
+        </Link>
+      );
+    }
+    return (
+      <button
+        className={cn(variants({ variant, size, className }))}
+        ref={ref}
+        {...props}
+      >
+        {children}
+      </button>
+    );
+  }
+);
 
 export default FormButton;

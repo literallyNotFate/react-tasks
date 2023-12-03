@@ -2,9 +2,10 @@ import { useState, FormEvent, ChangeEvent } from "react";
 import FormInput from "../../ui/shared/FormInput";
 import { axiosApi } from "../../../api/axios";
 import FormButton from "../../ui/shared/FormButton";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ILogin, IError } from "../../../models/types";
 import Errors from "../../ui/shared/Errors";
+import toast from "react-hot-toast";
 
 const Login: React.FC = () => {
   const [user, setUser] = useState<ILogin>({
@@ -13,7 +14,6 @@ const Login: React.FC = () => {
   });
 
   const navigate = useNavigate();
-
   const [errors, setErrors] = useState<IError>({ errors: [] });
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -31,16 +31,12 @@ const Login: React.FC = () => {
       .post("/login", user)
       .then((response) => {
         setErrors({ errors: [] });
-        // setSuccess(response.statusText);
+        toast.success("Logged in as " + user.email);
 
         const { accessToken } = response.data;
         localStorage.setItem("accessToken", accessToken);
 
-        setTimeout(() => {
-          reset();
-        }, 1000);
-
-        //setSuccess("");
+        reset();
 
         const token = localStorage.getItem("accessToken");
         if (token) {
@@ -48,10 +44,10 @@ const Login: React.FC = () => {
         }
       })
       .catch((err) => {
-        if (err.response?.data.message) {
+        if (Array.isArray(err.response?.data.message)) {
           setErrors({ errors: err.response?.data.message });
-        } else if (err.response?.data) {
-          setErrors({ errors: [err.response?.data] });
+        } else {
+          setErrors({ errors: [err.response?.data.message] });
         }
       });
   };
@@ -67,16 +63,16 @@ const Login: React.FC = () => {
   return (
     <>
       <form
-        className="p-12 shadow-lg rounded-lg bg-white"
+        className="p-12 bg-black w-full md:w-1/2 border-2 border-gray-500 mx-auto"
         onSubmit={handleSubmit}
       >
-        <h1 className="text-center text-4xl font-bold text-indigo-500 mb-7">
-          Sign In
-        </h1>
+        <h1 className="text-4xl font-bold text-white mb-7">Sign In</h1>
 
-        {errors.errors.length > 0 && <Errors errors={errors.errors} />}
+        <div className="my-6">
+          {errors.errors.length > 0 && <Errors errors={errors.errors} />}
+        </div>
 
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-5">
           <FormInput
             label="Email"
             name="email"
@@ -91,8 +87,17 @@ const Login: React.FC = () => {
           />
         </div>
 
-        <div className="mt-5">
-          <FormButton>Sign In</FormButton>
+        <div className="mt-6">
+          <p className="text-white mb-3">
+            No account?{" "}
+            <Link to="/register" className="font-bold">
+              Make one!
+            </Link>
+          </p>
+
+          <FormButton size="lg" type="submit">
+            Sign In
+          </FormButton>
         </div>
       </form>
     </>

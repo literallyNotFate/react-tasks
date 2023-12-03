@@ -5,3 +5,7 @@
 .react-datepicker {
   position: fixed;
 }
+
+body {
+  background-color: #2d2d2d;
+}

@@ -1,3 +1,7 @@
+import clsx from "clsx";
+import { ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
+
 export const parseDateFromString = (
   string: string,
   char: string
@@ -23,3 +27,7 @@ export const generateRandomColor = (): string => {
 
   return color;
 };
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
