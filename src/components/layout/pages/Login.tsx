@@ -32,7 +32,7 @@ const Login: React.FC = () => {
 
     axiosApi
       .post("/login", user)
-      .then((response) => {
+      .then(async (response) => {
         setErrors({ errors: [] });
         toast.success("Logged in as " + user.email);
 
@@ -43,7 +43,7 @@ const Login: React.FC = () => {
 
         const token = localStorage.getItem("accessToken");
         if (token) {
-          getProfile();
+          await getProfile();
           navigate("/products", { replace: true });
         }
       })

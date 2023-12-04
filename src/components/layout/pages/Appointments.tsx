@@ -16,7 +16,8 @@ import AppointmentCalendar from "../../ui/calendar/AppointmentCalendar";
 import toast from "react-hot-toast";
 import Loading from "../../ui/shared/Loading";
 import { useAuth } from "../../../lib/hooks/useAuth";
-import { useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
+import useTimeout from "../../../lib/hooks/useTimeout";
 
 const Appointments: React.FC = () => {
   const [showCreate, setShowCreate] = useState<boolean>(false);
@@ -29,25 +30,26 @@ const Appointments: React.FC = () => {
   const [editId, setEditId] = useState<string>("");
 
   const [errors, setErrors] = useState<IError>({ errors: [] });
-  const { user, getProfile } = useAuth();
+  const { user, getProfile, loadingProfile } = useAuth();
 
   const [formResetFlag, setFormResetFlag] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const navigate = useNavigate();
-
   useEffect(() => {
-    const getAppointments = () => {
+    const getAppointments = async () => {
       setLoading(true);
-      axiosApi
-        .get<IAppointment[]>("/appointment")
-        .then((res) => setAppointments(res.data))
-        .catch((err) => toast.error(err))
-        .finally(() => setLoading(false));
+      try {
+        await getProfile();
+        const response = await axiosApi.get<IAppointment[]>("/appointment");
+        setAppointments(response.data);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
     };
 
     getAppointments();
-    getProfile();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -164,14 +166,18 @@ const Appointments: React.FC = () => {
       });
   };
 
-  useEffect(() => {
-    if (!user) {
-      navigate("/", { replace: true });
-    }
-  }, [user, navigate]);
+  const [profileLoadingTime, setProfileLoadingTime] = useState<number>(0);
 
-  if (loading) {
+  useTimeout(() => {
+    setProfileLoadingTime((prevTime) => prevTime + 1);
+  }, 1000);
+
+  if (loading || (!user && loadingProfile && profileLoadingTime < 5)) {
     return <Loading />;
+  }
+
+  if (!user) {
+    return <Navigate to="/" />;
   }
 
   return (

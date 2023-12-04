@@ -2,45 +2,38 @@ import { useEffect, useMemo, useState } from "react";
 import { axiosApi } from "../../../api/axios";
 import { ICartItem, IProduct } from "../../../models/types";
 import ProductCard from "../../ui/shared/card/ProductCard";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import Cart from "../../ui/Cart";
 import FormButton from "../../ui/shared/FormButton";
 import useCurrency from "../../../lib/hooks/useCurrency";
 import Loading from "../../ui/shared/Loading";
-import toast from "react-hot-toast";
 import { useAuth } from "../../../lib/hooks/useAuth";
+import useTimeout from "../../../lib/hooks/useTimeout";
 
 const Products: React.FC = () => {
   const [products, setProducts] = useState<IProduct[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
 
-  const { user, getProfile } = useAuth();
+  const { user, getProfile, loadingProfile } = useAuth();
 
   useEffect(() => {
-    const getAll = async () => {
+    const getProducts = async () => {
       setLoading(true);
-      axiosApi
-        .get<IProduct[]>("/product")
-        .then((res) => {
-          setProducts(res.data);
-        })
-        .catch((err) => {
-          toast.error(err);
-        })
-        .finally(() => setLoading(false));
+      try {
+        await getProfile();
+        const response = await axiosApi.get<IProduct[]>("/product");
+        setProducts(response.data);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
     };
 
-    getAll();
-    getProfile();
+    getProducts();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  useEffect(() => {
-    if (!user) {
-      navigate("/", { replace: true });
-    }
-  }, [user, navigate]);
 
   const [showCart, setShowCart] = useState<boolean>(false);
   const [cartItems, setCartItems] = useState<ICartItem[]>([]);
@@ -109,8 +102,18 @@ const Products: React.FC = () => {
     return cartItems.reduce((total, item) => total + item.quantity, 0);
   }, [cartItems]);
 
-  if (loading) {
+  const [profileLoadingTime, setProfileLoadingTime] = useState<number>(0);
+
+  useTimeout(() => {
+    setProfileLoadingTime((prevTime) => prevTime + 1);
+  }, 1000);
+
+  if (loading || (!user && loadingProfile && profileLoadingTime < 5)) {
     return <Loading />;
+  }
+
+  if (!user) {
+    return <Navigate to="/" />;
   }
 
   return (

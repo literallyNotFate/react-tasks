@@ -112,4 +112,5 @@ export interface IAuth {
   setUser: React.Dispatch<React.SetStateAction<IUser | null>>;
   getProfile: () => Promise<void>;
   logout: () => void;
+  loadingProfile: boolean;
 }

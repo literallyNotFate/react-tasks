@@ -4,16 +4,18 @@ import FormButton from "../../ui/shared/FormButton";
 import FormInput from "../../ui/shared/FormInput";
 import { IProductForm, IError, IBrandPartial } from "../../../models/types";
 import Errors from "../../ui/shared/Errors";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { CURRENCIES } from "../../../lib/constants";
 import toast from "react-hot-toast";
 import { useAuth } from "../../../lib/hooks/useAuth";
+import useTimeout from "../../../lib/hooks/useTimeout";
+import Loading from "../../ui/shared/Loading";
 
 const NewProduct: React.FC = () => {
   const navigate = useNavigate();
   const [brands, setBrands] = useState<IBrandPartial[]>([]);
 
-  const { user, getProfile } = useAuth();
+  const { user, getProfile, loadingProfile } = useAuth();
 
   const [product, setProduct] = useState<IProductForm>({
     name: "",
@@ -24,17 +26,17 @@ const NewProduct: React.FC = () => {
   });
 
   useEffect(() => {
-    const getBrands = () => {
-      axiosApi
-        .get<IBrandPartial[]>(`/brand`)
-        .then((res) =>
-          setBrands(res.data.map((raw) => ({ id: raw.id, name: raw.name })))
-        )
-        .catch((err) => console.log(err));
+    const getBrands = async () => {
+      try {
+        await getProfile();
+        const response = await axiosApi.get<IBrandPartial[]>(`/brand`);
+        setBrands(response.data.map((raw) => ({ id: raw.id, name: raw.name })));
+      } catch (error) {
+        console.error(error);
+      }
     };
 
     getBrands();
-    getProfile();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -83,11 +85,19 @@ const NewProduct: React.FC = () => {
     });
   };
 
-  useEffect(() => {
-    if (!user) {
-      navigate("/", { replace: true });
-    }
-  }, [user, navigate]);
+  const [profileLoadingTime, setProfileLoadingTime] = useState<number>(0);
+
+  useTimeout(() => {
+    setProfileLoadingTime((prevTime) => prevTime + 1);
+  }, 1000);
+
+  if (!user && loadingProfile && profileLoadingTime < 5) {
+    return <Loading />;
+  }
+
+  if (!user) {
+    return <Navigate to="/" />;
+  }
 
   return (
     <>

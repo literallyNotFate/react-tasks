@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Navigate } from "react-router-dom";
 import { IError, IProduct, IProductForm } from "../../../models/types";
 import { axiosApi } from "../../../api/axios";
 import { useEffect, useState } from "react";
@@ -6,6 +6,8 @@ import FormButton from "../../ui/shared/FormButton";
 import Edit from "../../ui/edit/Edit";
 import toast from "react-hot-toast";
 import Loading from "../../ui/shared/Loading";
+import { useAuth } from "../../../lib/hooks/useAuth";
+import useTimeout from "../../../lib/hooks/useTimeout";
 
 const ProductInspect: React.FC = () => {
   const { id } = useParams();
@@ -20,29 +22,54 @@ const ProductInspect: React.FC = () => {
   });
 
   const navigate = useNavigate();
+  const { user, loadingProfile, getProfile } = useAuth();
 
   useEffect(() => {
-    const getOne = (id: string | undefined) => {
+    // const getOne = (id: string | undefined) => {
+    //   setLoading(true);
+    //   axiosApi
+    //     .get(`/product/${id}`)
+    //     .then((res) => {
+    //       setProduct(res.data);
+    //       setEdit({
+    //         name: res.data.name,
+    //         description: res.data.description,
+    //         currency: res.data.currency,
+    //         price: res.data.price,
+    //         brandId: res.data.brandId,
+    //       });
+    //     })
+    //     .catch((err) => {
+    //       toast.error(err);
+    //     })
+    //     .finally(() => setLoading(false));
+    // };
+
+    // getOne(id);
+
+    const getOneProduct = async (id: string | undefined) => {
       setLoading(true);
-      axiosApi
-        .get(`/product/${id}`)
-        .then((res) => {
-          setProduct(res.data);
-          setEdit({
-            name: res.data.name,
-            description: res.data.description,
-            currency: res.data.currency,
-            price: res.data.price,
-            brandId: res.data.brandId,
-          });
-        })
-        .catch((err) => {
-          toast.error(err);
-        })
-        .finally(() => setLoading(false));
+      try {
+        await getProfile();
+        const response = await axiosApi.get<IProduct>(`/product/${id}`);
+
+        setProduct(response.data);
+        setEdit({
+          name: response.data.name,
+          description: response.data.description,
+          currency: response.data.currency,
+          price: response.data.price,
+          brandId: response.data.brandId,
+        });
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
     };
 
-    getOne(id);
+    getOneProduct(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   const [showModal, setShowModal] = useState<boolean>(false);
@@ -80,8 +107,18 @@ const ProductInspect: React.FC = () => {
       });
   };
 
-  if (loading) {
+  const [profileLoadingTime, setProfileLoadingTime] = useState<number>(0);
+
+  useTimeout(() => {
+    setProfileLoadingTime((prevTime) => prevTime + 1);
+  }, 1000);
+
+  if (loading || (!user && loadingProfile && profileLoadingTime < 5)) {
     return <Loading />;
+  }
+
+  if (!user) {
+    return <Navigate to="/" />;
   }
 
   return (

@@ -1,14 +1,19 @@
 import React, { useEffect } from "react";
 import { useAuth } from "../../../lib/hooks/useAuth";
 import { Link } from "react-router-dom";
+import Loading from "../../ui/shared/Loading";
 
 const Profile: React.FC = () => {
-  const { user, getProfile } = useAuth();
+  const { user, getProfile, loadingProfile } = useAuth();
 
   useEffect(() => {
     getProfile();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  if (loadingProfile) {
+    return <Loading />;
+  }
 
   return (
     <div className="p-12 bg-black w-full md:w-3/4 border-2 border-gray-500 mx-auto text-white">

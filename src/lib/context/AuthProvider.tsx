@@ -11,10 +11,12 @@ export const AuthContext = createContext<IAuth>({
   setUser: () => {},
   getProfile: async () => {},
   logout: () => {},
+  loadingProfile: false,
 });
 
 const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<IUser | null>(null);
+  const [loadingProfile, setloadingProfile] = useState<boolean>(true);
 
   const getProfile = async () => {
     try {
@@ -23,6 +25,8 @@ const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
     } catch (error) {
       console.error(error);
       throw error;
+    } finally {
+      setloadingProfile(false);
     }
   };
 
@@ -32,7 +36,9 @@ const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, setUser, getProfile, logout }}>
+    <AuthContext.Provider
+      value={{ user, setUser, getProfile, logout, loadingProfile }}
+    >
       {children}
     </AuthContext.Provider>
   );
