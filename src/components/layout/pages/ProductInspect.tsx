@@ -4,7 +4,7 @@ import { axiosApi } from "../../../api/axios";
 import { useEffect, useState } from "react";
 import FormButton from "../../ui/shared/FormButton";
 import Edit from "../../ui/edit/Edit";
-import toast from "react-hot-toast/headless";
+import toast from "react-hot-toast";
 import Loading from "../../ui/shared/Loading";
 
 const ProductInspect: React.FC = () => {
@@ -57,7 +57,7 @@ const ProductInspect: React.FC = () => {
         setProduct(res.data);
 
         setShowModal(false);
-        toast.success(`Edited product with id: ${res.data.id}`);
+        toast.success(`Edited product with ID: ${res.data.id}`);
       })
       .catch((err) => {
         if (err.response?.data.message) {
@@ -71,9 +71,9 @@ const ProductInspect: React.FC = () => {
   const onDelete = (id: string | undefined) => {
     axiosApi
       .delete(`/product/${id}`)
-      .then((res) => {
+      .then(() => {
         navigate("/products", { replace: true });
-        toast.success(`Deleted product with id: ${res.data.id}`);
+        toast.success(`Deleted product with ID: ${id}`);
       })
       .catch((err) => {
         toast.error(err.response.data.message);

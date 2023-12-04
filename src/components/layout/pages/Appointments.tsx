@@ -15,6 +15,8 @@ import { parseDateFromString } from "../../../lib/utils";
 import AppointmentCalendar from "../../ui/calendar/AppointmentCalendar";
 import toast from "react-hot-toast";
 import Loading from "../../ui/shared/Loading";
+import { useAuth } from "../../../lib/hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 
 const Appointments: React.FC = () => {
   const [showCreate, setShowCreate] = useState<boolean>(false);
@@ -27,10 +29,12 @@ const Appointments: React.FC = () => {
   const [editId, setEditId] = useState<string>("");
 
   const [errors, setErrors] = useState<IError>({ errors: [] });
-  const [me, setMe] = useState<IUser>();
+  const { user, getProfile } = useAuth();
 
   const [formResetFlag, setFormResetFlag] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const getAppointments = () => {
@@ -42,15 +46,9 @@ const Appointments: React.FC = () => {
         .finally(() => setLoading(false));
     };
 
-    const getMe = () => {
-      axiosApi
-        .get<IUser>("/user/profile")
-        .then((res) => setMe(res.data))
-        .catch((err) => console.log(err));
-    };
-
     getAppointments();
-    getMe();
+    getProfile();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const parseToApiData = (appointment: IAppointmentForm): IAppointmentData => {
@@ -65,7 +63,7 @@ const Appointments: React.FC = () => {
       }
     }
 
-    const id = me ? parseInt(me.id, 10) : 0;
+    const id = user ? parseInt(user.id, 10) : 0;
 
     const data: IAppointmentData = {
       name: appointment.name,
@@ -166,13 +164,19 @@ const Appointments: React.FC = () => {
       });
   };
 
+  useEffect(() => {
+    if (!user) {
+      navigate("/", { replace: true });
+    }
+  }, [user, navigate]);
+
   if (loading) {
     return <Loading />;
   }
 
   return (
     <>
-      <div className="p-12 bg-black w-full md:w-3/4 border-2 border-gray-500 mx-auto  flex flex-col gap-5">
+      <div className="p-12 bg-black w-full md:w-3/4 border-2 border-gray-500 mx-auto flex flex-col gap-5">
         <div>
           <h1 className="text-4xl font-bold text-white mb-7">
             All Appointments
@@ -199,7 +203,7 @@ const Appointments: React.FC = () => {
           setShow={setShowCreate}
           onCreate={onCreate}
           errors={errors}
-          me={me as IUser}
+          me={user as IUser}
           resetForm={formResetFlag}
           setResetFormFlag={() => setFormResetFlag(false)}
         />
@@ -212,7 +216,7 @@ const Appointments: React.FC = () => {
           id={editId}
           errors={errors}
           setErrors={setErrors}
-          me={me as IUser}
+          me={user as IUser}
         />
       </div>
     </>

@@ -44,7 +44,7 @@ const AppointmentCalendar: React.FC<ICalendarProps> = ({
       const response = await axiosApi.get<IAppointment>(`appointment/${id}`);
       return response.data;
     } catch (error) {
-      console.log(error);
+      console.error(error);
       throw error;
     }
   };
@@ -62,7 +62,7 @@ const AppointmentCalendar: React.FC<ICalendarProps> = ({
 
       setSelected(results);
     } catch (error) {
-      console.log(error);
+      console.error(error);
       throw error;
     }
   };
@@ -232,7 +232,7 @@ const AppointmentCalendar: React.FC<ICalendarProps> = ({
 
       <div className="my-6">
         {selected.length > 0 ? (
-          <div className="grid grid-cols-3 gap-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
             {selected.map((app) => (
               <AppointmentCard
                 appointment={app}

@@ -5,7 +5,8 @@ import FormInput from "../../ui/shared/FormInput";
 import { axiosApi } from "../../../api/axios";
 import { Link, useNavigate } from "react-router-dom";
 import Errors from "../../ui/shared/Errors";
-import toast from "react-hot-toast/headless";
+import toast from "react-hot-toast";
+import { useAuth } from "../../../lib/hooks/useAuth";
 
 const Register: React.FC = () => {
   const [user, setUser] = useState<IUserForm>({
@@ -18,6 +19,8 @@ const Register: React.FC = () => {
 
   const navigate = useNavigate();
   const [errors, setErrors] = useState<IError>({ errors: [] });
+
+  const { getProfile } = useAuth();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -43,6 +46,7 @@ const Register: React.FC = () => {
 
         const token = localStorage.getItem("accessToken");
         if (token) {
+          getProfile();
           navigate("/products", { replace: true });
         }
       })

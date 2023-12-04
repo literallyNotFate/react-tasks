@@ -9,6 +9,8 @@ import Appointments from "./components/layout/pages/Appointments";
 import ToastProvider from "./lib/context/ToastProvider";
 import Home from "./components/layout/pages/Home";
 import NotFound from "./components/layout/pages/NotFound";
+import AuthProvider from "./lib/context/AuthProvider";
+import Profile from "./components/layout/pages/Profile";
 
 const AppRoutes = () => {
   const routes = useRoutes([
@@ -19,6 +21,7 @@ const AppRoutes = () => {
     { path: "/products/new", element: <NewProduct /> },
     { path: "/products/:id", element: <ProductInspect /> },
     { path: "/appointments", element: <Appointments /> },
+    { path: "/profile", element: <Profile /> },
     { path: "*", element: <NotFound /> },
   ]);
 
@@ -29,10 +32,12 @@ function App() {
   return (
     <>
       <BrowserRouter>
-        <ToastProvider>
-          <Navbar />
-          <AppRoutes />
-        </ToastProvider>
+        <AuthProvider>
+          <ToastProvider>
+            <Navbar />
+            <AppRoutes />
+          </ToastProvider>
+        </AuthProvider>
       </BrowserRouter>
     </>
   );

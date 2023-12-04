@@ -6,6 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { ILogin, IError } from "../../../models/types";
 import Errors from "../../ui/shared/Errors";
 import toast from "react-hot-toast";
+import { useAuth } from "../../../lib/hooks/useAuth";
 
 const Login: React.FC = () => {
   const [user, setUser] = useState<ILogin>({
@@ -15,6 +16,8 @@ const Login: React.FC = () => {
 
   const navigate = useNavigate();
   const [errors, setErrors] = useState<IError>({ errors: [] });
+
+  const { getProfile } = useAuth();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -40,6 +43,7 @@ const Login: React.FC = () => {
 
         const token = localStorage.getItem("accessToken");
         if (token) {
+          getProfile();
           navigate("/products", { replace: true });
         }
       })

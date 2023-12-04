@@ -7,12 +7,15 @@ import Cart from "../../ui/Cart";
 import FormButton from "../../ui/shared/FormButton";
 import useCurrency from "../../../lib/hooks/useCurrency";
 import Loading from "../../ui/shared/Loading";
-import toast from "react-hot-toast/headless";
+import toast from "react-hot-toast";
+import { useAuth } from "../../../lib/hooks/useAuth";
 
 const Products: React.FC = () => {
   const [products, setProducts] = useState<IProduct[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
+
+  const { user, getProfile } = useAuth();
 
   useEffect(() => {
     const getAll = async () => {
@@ -29,7 +32,15 @@ const Products: React.FC = () => {
     };
 
     getAll();
+    getProfile();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (!user) {
+      navigate("/", { replace: true });
+    }
+  }, [user, navigate]);
 
   const [showCart, setShowCart] = useState<boolean>(false);
   const [cartItems, setCartItems] = useState<ICartItem[]>([]);

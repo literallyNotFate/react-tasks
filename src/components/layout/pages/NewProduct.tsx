@@ -6,11 +6,14 @@ import { IProductForm, IError, IBrandPartial } from "../../../models/types";
 import Errors from "../../ui/shared/Errors";
 import { useNavigate } from "react-router-dom";
 import { CURRENCIES } from "../../../lib/constants";
-import toast from "react-hot-toast/headless";
+import toast from "react-hot-toast";
+import { useAuth } from "../../../lib/hooks/useAuth";
 
 const NewProduct: React.FC = () => {
   const navigate = useNavigate();
   const [brands, setBrands] = useState<IBrandPartial[]>([]);
+
+  const { user, getProfile } = useAuth();
 
   const [product, setProduct] = useState<IProductForm>({
     name: "",
@@ -31,7 +34,9 @@ const NewProduct: React.FC = () => {
     };
 
     getBrands();
-  }, [brands]);
+    getProfile();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const [errors, setErrors] = useState<IError>({ errors: [] });
 
@@ -50,7 +55,9 @@ const NewProduct: React.FC = () => {
       .post("/product", product)
       .then((res) => {
         setErrors({ errors: [] });
-        toast.success(res.statusText);
+        toast.success(
+          `New product ${res.data.name} with ID: ${res.data.id} created`
+        );
 
         reset();
 
@@ -70,11 +77,17 @@ const NewProduct: React.FC = () => {
     setProduct({
       name: "",
       description: "",
-      currency: "",
+      currency: CURRENCIES[0],
       price: 0,
-      brandId: 0,
+      brandId: 1,
     });
   };
+
+  useEffect(() => {
+    if (!user) {
+      navigate("/", { replace: true });
+    }
+  }, [user, navigate]);
 
   return (
     <>

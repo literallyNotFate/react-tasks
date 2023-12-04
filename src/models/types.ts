@@ -106,3 +106,10 @@ export interface IAppointment {
   userId: string;
   user: IUser;
 }
+
+export interface IAuth {
+  user: IUser | null;
+  setUser: React.Dispatch<React.SetStateAction<IUser | null>>;
+  getProfile: () => Promise<void>;
+  logout: () => void;
+}
