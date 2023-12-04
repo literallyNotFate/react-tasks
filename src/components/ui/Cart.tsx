@@ -36,7 +36,7 @@ const Cart: React.FC<ICartProps> = ({
               <label htmlFor="target">Select currency to convert total</label>
               <select
                 id="target"
-                className="flex h-10 w-full text-white rounded-md border border-white bg-transparent py-2 px-3 text-sm placeholder:text-white focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 focus:border-red-500"
+                className="flex h-10 w-full dark:text-white text-black rounded-md border dark:border-white border-black bg-transparent py-2 px-3 text-sm dark:placeholder:text-white placeholder:text-black focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 focus:border-red-500 dark:focus:border-red-500"
                 value={target}
                 onChange={(e: ChangeEvent<HTMLSelectElement>) => {
                   setTarget(e.target.value);
@@ -46,7 +46,7 @@ const Cart: React.FC<ICartProps> = ({
                   <option
                     key={code}
                     value={code}
-                    className="bg-black text-white"
+                    className="dark:bg-black dark:text-white bg-white text-black"
                   >
                     {code}
                   </option>

@@ -98,7 +98,7 @@ const Edit: React.FC<IEditProps> = ({
                     <label htmlFor="currency">Brand</label>
                     <select
                       id="currency"
-                      className="flex h-10 w-full text-white rounded-md border border-white bg-transparent py-2 px-3 text-sm placeholder:text-white focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 focus:border-red-500"
+                      className="flex h-10 w-full dark:text-white text-black rounded-md border dark:border-white border-black bg-transparent py-2 px-3 text-sm dark:placeholder:text-white placeholder:text-black focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 focus:border-red-500 dark:focus:border-red-500"
                       value={editData.currency}
                       onChange={(e: ChangeEvent<HTMLSelectElement>) => {
                         setEditData((prev) => ({
@@ -111,7 +111,7 @@ const Edit: React.FC<IEditProps> = ({
                         <option
                           key={code}
                           value={code}
-                          className="bg-black text-white"
+                          className="dark:bg-black dark:text-white bg-white text-black"
                         >
                           {code}
                         </option>
@@ -123,7 +123,7 @@ const Edit: React.FC<IEditProps> = ({
                     <label htmlFor="brands">Brand</label>
                     <select
                       id="brands"
-                      className="flex h-10 w-full text-white rounded-md border border-white bg-transparent py-2 px-3 text-sm placeholder:text-white focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 focus:border-red-500"
+                      className="flex h-10 w-full dark:text-white text-black rounded-md border dark:border-white border-black bg-transparent py-2 px-3 text-sm dark:placeholder:text-white placeholder:text-black focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 focus:border-red-500 dark:focus:border-red-500"
                       value={editData.brandId}
                       onChange={(e: ChangeEvent<HTMLSelectElement>) => {
                         setEditData((prev) => ({
@@ -136,7 +136,7 @@ const Edit: React.FC<IEditProps> = ({
                         <option
                           key={brand.id}
                           value={brand.id}
-                          className="bg-black text-white"
+                          className="dark:bg-black dark:text-white bg-white text-black"
                         >
                           {brand.name}
                         </option>
@@ -150,7 +150,7 @@ const Edit: React.FC<IEditProps> = ({
                   <textarea
                     name="description"
                     id="description"
-                    className="flex h-[150px]  w-full text-white rounded-md border border-white bg-transparent py-2 px-3 text-sm placeholder:text-white focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 focus:border-red-500"
+                    className="flex h-[150px] w-full dark:text-white text-black rounded-md border dark:border-white border-black bg-transparent py-2 px-3 text-sm dark:placeholder:text-white placeholder:text-black focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 focus:border-red-500 dark:focus:border-red-500"
                     style={{ resize: "none" }}
                     value={editData.description || ""}
                     onChange={(e: ChangeEvent<HTMLTextAreaElement>) => {

@@ -102,10 +102,10 @@ const NewProduct: React.FC = () => {
   return (
     <>
       <form
-        className="p-12 bg-black w-full md:w-3/4 border-2 border-gray-500 mx-auto"
+        className="p-12 dark:bg-black bg-white w-full md:w-3/4 border-2 dark:border-gray-500 border-gray-200 text-black dark:text-white mx-auto"
         onSubmit={handleSubmit}
       >
-        <h1 className="text-4xl font-bold text-white mb-7">Create Product</h1>
+        <h1 className="text-4xl font-bold mb-7">Create Product</h1>
 
         <div className="my-6">
           {errors.errors.length > 0 && <Errors errors={errors.errors} />}
@@ -129,12 +129,12 @@ const NewProduct: React.FC = () => {
             />
 
             <div className="flex flex-col gap-2 w-full">
-              <label htmlFor="currency" className="text-white text-lg">
+              <label htmlFor="currency" className="text-lg">
                 Currency
               </label>
               <select
                 id="currency"
-                className="flex h-10 w-full text-white rounded-md border border-white bg-transparent py-2 px-3 text-sm placeholder:text-white focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 focus:border-red-500"
+                className="flex h-10 w-full dark:text-white text-black rounded-md border dark:border-white border-black bg-transparent py-2 px-3 text-sm dark:placeholder:text-white placeholder:text-black focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 focus:border-red-500 dark:focus:border-red-500"
                 value={product.currency}
                 onChange={(e: ChangeEvent<HTMLSelectElement>) => {
                   setProduct((prev) => ({
@@ -147,7 +147,7 @@ const NewProduct: React.FC = () => {
                   <option
                     key={code}
                     value={code}
-                    className="bg-black text-white"
+                    className="dark:bg-black dark:text-white bg-white text-black"
                   >
                     {code}
                   </option>
@@ -156,12 +156,12 @@ const NewProduct: React.FC = () => {
             </div>
 
             <div className="flex flex-col gap-2 w-full">
-              <label htmlFor="brands" className="text-white text-lg">
+              <label htmlFor="brands" className="text-lg">
                 Brand
               </label>
               <select
                 id="brands"
-                className="flex h-10 w-full text-white rounded-md border border-white bg-transparent py-2 px-3 text-sm placeholder:text-white focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 focus:border-red-500"
+                className="flex h-10 w-full dark:text-white text-black rounded-md border dark:border-white border-black bg-transparent py-2 px-3 text-sm dark:placeholder:text-white placeholder:text-black focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 focus:border-red-500 dark:focus:border-red-500"
                 value={product.brandId}
                 onChange={(e: ChangeEvent<HTMLSelectElement>) => {
                   setProduct((prev) => ({
@@ -174,7 +174,7 @@ const NewProduct: React.FC = () => {
                   <option
                     key={brand.id}
                     value={brand.id}
-                    className="bg-black text-white"
+                    className="dark:bg-black dark:text-white bg-white text-black"
                   >
                     {brand.name}
                   </option>
@@ -184,13 +184,13 @@ const NewProduct: React.FC = () => {
           </div>
 
           <div className="flex flex-col gap-2 w-full">
-            <label htmlFor="description" className="text-white text-lg">
+            <label htmlFor="description" className="text-lg">
               Description
             </label>
             <textarea
               name="description"
               id="description"
-              className="flex h-[150px]  w-full text-white rounded-md border border-white bg-transparent py-2 px-3 text-sm placeholder:text-white focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 focus:border-red-500"
+              className="flex h-[150px] w-full dark:text-white text-black rounded-md border dark:border-white border-black bg-transparent py-2 px-3 text-sm dark:placeholder:text-white placeholder:text-black focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 focus:border-red-500 dark:focus:border-red-500"
               style={{ resize: "none" }}
               value={product.description}
               onChange={(e: ChangeEvent<HTMLTextAreaElement>) => {

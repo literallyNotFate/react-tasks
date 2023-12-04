@@ -16,11 +16,12 @@ export const CURRENCIES: string[] = [
 ];
 
 export const variants = cva(
-  "inline-flex items-center justify-center rounded-md text-sm font-medium transition-all duration-150 bg-transparent border disabled:pointer-events-none hover:text-white",
+  "inline-flex items-center justify-center rounded-md text-sm font-medium bg-transparent border disabled:pointer-events-none hover:text-white",
   {
     variants: {
       variant: {
-        default: "border-white text-white hover:bg-white hover:text-black",
+        default:
+          "text-black border-black hover:bg-black dark:border-white dark:text-white dark:hover:bg-white dark:hover:text-black",
         danger: "border-red-500 text-red-500 hover:bg-red-500",
         success: "border-green-500 text-green-500 hover:bg-green-500",
         warning:

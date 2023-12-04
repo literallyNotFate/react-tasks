@@ -16,7 +16,7 @@ const Profile: React.FC = () => {
   }
 
   return (
-    <div className="p-12 bg-black w-full md:w-3/4 border-2 border-gray-500 mx-auto text-white">
+    <div className="p-12 dark:bg-black bg-white text-black w-full md:w-3/4 border-2 dark:border-gray-500 mx-auto dark:text-white border-gray-200">
       {user ? (
         <div className="flex flex-col gap-5">
           <h1 className="text-4xl font-bold text-center">

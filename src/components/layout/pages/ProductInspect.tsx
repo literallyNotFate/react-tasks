@@ -25,28 +25,6 @@ const ProductInspect: React.FC = () => {
   const { user, loadingProfile, getProfile } = useAuth();
 
   useEffect(() => {
-    // const getOne = (id: string | undefined) => {
-    //   setLoading(true);
-    //   axiosApi
-    //     .get(`/product/${id}`)
-    //     .then((res) => {
-    //       setProduct(res.data);
-    //       setEdit({
-    //         name: res.data.name,
-    //         description: res.data.description,
-    //         currency: res.data.currency,
-    //         price: res.data.price,
-    //         brandId: res.data.brandId,
-    //       });
-    //     })
-    //     .catch((err) => {
-    //       toast.error(err);
-    //     })
-    //     .finally(() => setLoading(false));
-    // };
-
-    // getOne(id);
-
     const getOneProduct = async (id: string | undefined) => {
       setLoading(true);
       try {
@@ -123,15 +101,13 @@ const ProductInspect: React.FC = () => {
 
   return (
     <>
-      <div className="p-12 bg-black w-full md:w-1/2 border-2 border-gray-500 mx-auto">
-        <h1 className="text-3xl font-bold text-white">
+      <div className="p-12 bg-white dark:bg-black w-full md:w-1/2 border-2 dark:border-gray-500 border-gray-200 mx-auto text-black dark:text-white">
+        <h1 className="text-3xl font-bold">
           {product?.name} (ID: {product?.id})
         </h1>
-        <h2 className="mt-3 text-white text-xl">
-          Brand: {product?.brand.name}
-        </h2>
+        <h2 className="mt-3 text-xl">Brand: {product?.brand.name}</h2>
 
-        <div className="text-white mb-6">
+        <div className="mb-6">
           {product?.description ? (
             <h2 className="text-lg">Description: {product?.description}</h2>
           ) : (
@@ -139,7 +115,7 @@ const ProductInspect: React.FC = () => {
           )}
         </div>
 
-        <h2 className="text-2xl text-white text-end">
+        <h2 className="text-2xl text-end">
           Price:{" "}
           <span className="text-green-500 font-bold">
             {product?.price} {product?.currency}

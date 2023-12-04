@@ -6,6 +6,10 @@
   position: fixed;
 }
 
-body {
+.dark {
   background-color: #2d2d2d;
 }
+
+/* * {
+  transition: all 0.3s;
+} */

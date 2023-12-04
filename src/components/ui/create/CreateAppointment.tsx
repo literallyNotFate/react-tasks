@@ -80,7 +80,7 @@ const CreateAppointment: React.FC<ICreateAppointmentProps> = ({
         </div>
 
         <form onSubmit={handleSubmit}>
-          <div className="bg-black px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+          <div className="dark:bg-black bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
             <FormInput
               name="name"
               onChange={handleChange}
@@ -102,7 +102,7 @@ const CreateAppointment: React.FC<ICreateAppointmentProps> = ({
                   open
                   readOnly
                   name="date"
-                  className="flex h-10 w-full text-white rounded-md border border-white bg-transparent py-2 px-3 text-sm placeholder:text-white focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 focus:border-red-500"
+                  className="flex h-10 w-full dark:text-white text-black rounded-md border dark:border-white border-black bg-transparent py-2 px-3 text-sm dark:placeholder:text-white placeholder:text-black focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 focus:border-red-500 dark:focus:border-red-500"
                 />
               </div>
 

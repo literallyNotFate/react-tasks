@@ -67,10 +67,10 @@ const Login: React.FC = () => {
   return (
     <>
       <form
-        className="p-12 bg-black w-full md:w-1/2 border-2 border-gray-500 mx-auto"
+        className="p-12 bg-white dark:bg-black w-full md:w-1/2 border-2 dark:border-gray-500 border-gray-200 mx-auto text-black dark:text-white"
         onSubmit={handleSubmit}
       >
-        <h1 className="text-4xl font-bold text-white mb-7">Sign In</h1>
+        <h1 className="text-4xl font-bold mb-7">Sign In</h1>
 
         <div className="my-6">
           {errors.errors.length > 0 && <Errors errors={errors.errors} />}
@@ -92,7 +92,7 @@ const Login: React.FC = () => {
         </div>
 
         <div className="mt-6">
-          <p className="text-white mb-3">
+          <p className="mb-3">
             No account?{" "}
             <Link to="/register" className="font-bold">
               Make one!

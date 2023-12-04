@@ -73,10 +73,10 @@ const Register: React.FC = () => {
   return (
     <>
       <form
-        className="p-12 bg-black w-full md:w-1/2 border-2 border-gray-500 mx-auto"
+        className="p-12 bg-white dark:bg-black w-full md:w-1/2 border-2 dark:border-gray-500 border-gray-200 mx-auto text-black dark:text-white"
         onSubmit={handleSubmit}
       >
-        <h1 className="text-4xl font-bold text-white mb-7">Sign Up</h1>
+        <h1 className="text-4xl font-bold mb-7">Sign Up</h1>
 
         <div className="my-6">
           {errors.errors.length > 0 && <Errors errors={errors.errors} />}
@@ -120,7 +120,7 @@ const Register: React.FC = () => {
           />
 
           <div className="mt-2">
-            <p className="text-white mb-3">
+            <p className="mb-3">
               Having account?{" "}
               <Link to="/login" className="font-bold">
                 Log in!

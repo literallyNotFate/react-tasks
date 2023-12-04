@@ -161,7 +161,7 @@ const AppointmentCalendar: React.FC<ICalendarProps> = ({
             className={`cursor-pointer hover:border hover:border-red-500 w-32 h-32 ${
               currentDate.isSame(dayjs(), "day")
                 ? "bg-green-200 text-black"
-                : "bg-gray-900 text-white"
+                : "dark:bg-gray-900 dark:text-white bg-gray-200 text-black"
             }`}
             onClick={() => handleClick(appointmentsForDay)}
           >
@@ -202,7 +202,10 @@ const AppointmentCalendar: React.FC<ICalendarProps> = ({
         );
       } else {
         weekDays.push(
-          <td key={`empty-calendar-day-${i}`} className="bg-black"></td>
+          <td
+            key={`empty-calendar-day-${i}`}
+            className="dark:bg-black bg-white"
+          ></td>
         );
       }
     }
@@ -217,12 +220,12 @@ const AppointmentCalendar: React.FC<ICalendarProps> = ({
   };
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col dark:text-white text-black">
       <div className="flex items-center mb-4 gap-5 mx-auto">
         <FormButton className="mr-2 w-fit" onClick={goToPreviousMonth}>
           Previous
         </FormButton>
-        <h1 className="text-lg md:text-3xl text-center font-bold text-white">
+        <h1 className="text-lg md:text-3xl text-center font-bold">
           {currentMonth.format("MMMM YYYY")}
         </h1>
         <FormButton className="ml-2 w-fit" onClick={goToNextMonth}>
@@ -252,7 +255,7 @@ const AppointmentCalendar: React.FC<ICalendarProps> = ({
               {daysOfWeek.map((day, index) => (
                 <th
                   key={`day-of-week-${index}`}
-                  className="font-bold bg-black text-white p-3"
+                  className="font-bold dark:bg-black bg-gray-200 dark:text-white text-black p-3"
                 >
                   {day}
                 </th>

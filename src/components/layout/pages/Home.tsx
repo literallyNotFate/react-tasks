@@ -2,7 +2,7 @@ import FormButton from "../../ui/shared/FormButton";
 
 const Home: React.FC = () => {
   return (
-    <div className="text-white text-center">
+    <div className="text-black text-center dark:text-white">
       <h1 className="text-6xl font-bold mb-5">react-tasks</h1>
       <h2 className="text-3xl italic">Check products and appointments</h2>
 

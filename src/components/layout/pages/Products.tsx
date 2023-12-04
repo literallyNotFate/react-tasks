@@ -118,11 +118,11 @@ const Products: React.FC = () => {
 
   return (
     <>
-      <div className="p-12 bg-black w-full md:w-3/4 border-2 border-gray-500 mx-auto">
+      <div className="p-12 bg-white dark:bg-black w-full md:w-3/4 border-2 dark:border-gray-500 border-gray-200 mx-auto text-black dark:text-white">
         <div>
           {products.length > 0 ? (
             <div>
-              <h1 className="mb-6 font-bold text-3xl text-white">
+              <h1 className="mb-6 font-bold text-3xl">
                 Products ({products.length})
               </h1>
               <div className="flex gap-5 mb-6">

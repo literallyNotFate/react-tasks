@@ -182,11 +182,9 @@ const Appointments: React.FC = () => {
 
   return (
     <>
-      <div className="p-12 bg-black w-full md:w-3/4 border-2 border-gray-500 mx-auto flex flex-col gap-5">
+      <div className="p-12 bg-white dark:bg-black w-full md:w-3/4 border-2 dark:border-gray-500 border-gray-200 mx-auto text-black dark:text-white flex flex-col gap-5">
         <div>
-          <h1 className="text-4xl font-bold text-white mb-7">
-            All Appointments
-          </h1>
+          <h1 className="text-4xl font-bold mb-7">All Appointments</h1>
         </div>
         <div className="w-64">
           <FormButton onClick={() => setShowCreate(true)} variant="success">
